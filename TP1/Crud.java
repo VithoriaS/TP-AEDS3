@@ -122,6 +122,7 @@ public class Crud {
         while (x < len) {
             c = arq.readChar();
             if (c != '*') {
+                System.out.println("Talvez");
                 int length = arq.readInt();
                 ba = new byte[length];
                 arq.read(ba);

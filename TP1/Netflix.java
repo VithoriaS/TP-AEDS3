@@ -15,6 +15,7 @@ import java.util.Scanner;
 import javax.lang.model.util.ElementScanner14;
 
 public class Netflix {
+    char lapide;
     int Id = 0;
     String Type = "";
     String Name = "";
@@ -159,6 +160,7 @@ public class Netflix {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
+        dos.writeChar(' ');
         dos.writeInt(Id);
         // System.out.println("ID: " + Id);
         //dos.writeInt(Type.length());
@@ -220,6 +222,7 @@ public class Netflix {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
 
+        lapide = dis.readChar();
         Id = dis.readInt();
         // System.out.println(Id);
        // dis.readInt();
@@ -510,8 +513,6 @@ public class Netflix {
         bf.close();
 
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
-
-        
         
           arq.writeInt(8807);
           for (int i = 0; i < 8807; i++) {
