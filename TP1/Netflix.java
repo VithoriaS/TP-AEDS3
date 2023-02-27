@@ -25,7 +25,7 @@ public class Netflix {
     int seasons = 0;
     String[] Listed_in = null;
     String Description = "";
-
+    //teste
     public Netflix(int id, String type, String name, String[] cast, Data data_added, int min, int seasons,
             String[] listed_in, String description) {
         Id = id;
