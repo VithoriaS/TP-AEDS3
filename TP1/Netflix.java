@@ -1,29 +1,24 @@
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import javax.lang.model.util.ElementScanner14;
-
 public class Netflix {
     char lapide;
     int Id = 0;
     String Type = "";
     String Name = "";
-    String[] Cast = null;
+    String[] Cast = new String[0];
     Data Data_added = new Data();
     int min = 0;
     int seasons = 0;
-    String[] Listed_in = null;
+    String[] Listed_in = new String[0];
     String Description = "";
     //teste
     public Netflix(int id, String type, String name, String[] cast, Data data_added, int min, int seasons,
@@ -160,7 +155,7 @@ public class Netflix {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
-        dos.writeChar(' ');
+       // dos.writeChar(' ');
         dos.writeInt(Id);
         // System.out.println("ID: " + Id);
         //dos.writeInt(Type.length());
@@ -173,9 +168,7 @@ public class Netflix {
         // System.out.println("TYPE: " + Name);
         dos.writeUTF(Name);
 
-        if (Cast == null) {
-            dos.writeInt(0);
-        } else {
+       
             dos.writeInt(Cast.length);
             // System.out.println("Cast.length: " + Cast.length);
             for (int i = 0; i < Cast.length; i++) {
@@ -184,7 +177,7 @@ public class Netflix {
                 // System.out.println("Cast[i]: " + Cast[i]);
                 dos.writeUTF(Cast[i]);
             }
-        }
+        
 
       //  dos.writeInt(Data_added.getMes().length());
         // System.out.println("Data_added.getMes().length(): " +
@@ -196,9 +189,7 @@ public class Netflix {
         dos.writeInt(Data_added.getDia());
         dos.writeInt(Data_added.getAno());
 
-        if (Listed_in == null) {
-            dos.writeInt(0);
-        } else {
+      
             dos.writeInt(Listed_in.length);
             // System.out.println("Listed_in.length: " + Listed_in.length);
             for (int i = 0; i < Listed_in.length; i++) {
@@ -207,7 +198,7 @@ public class Netflix {
                 // System.out.println("Listed_in[i]: " + Listed_in[i]);
                 dos.writeUTF(Listed_in[i]);
             }
-        }
+        
 
         // System.out.println("Description.length(): " + Description.length());
         //dos.writeInt(Description.length());
@@ -222,7 +213,7 @@ public class Netflix {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
 
-        lapide = dis.readChar();
+        //lapide = dis.readChar();
         Id = dis.readInt();
         // System.out.println(Id);
        // dis.readInt();
@@ -263,13 +254,10 @@ public class Netflix {
 
     }
 
-
-
-    
     public Netflix(String str) {
 
-        String[] Cast = null;
-        String[] Listed_in = null;
+        String[] Cast = new String[0];
+        String[] Listed_in = new String[0];
         String aux = "";
         int i = 0;
 
@@ -486,14 +474,21 @@ public class Netflix {
         // --------------------------------Description-----------------------------
         aux = "";
         if (str.charAt(i + 1) == '\"') {
+            
             for (i = i + 2; str.charAt(i) != '\"'; i++) {
                 aux += str.charAt(i);
             }
         } else {
-            for (i = i + 1; i > str.length(); i++) {
-                aux += str.charAt(i);
+           
+            
+            for (i = i + 1; i < str.length(); i++) {
+                
+            
+            
+                aux = aux +  str.charAt(i);
             }
-
+           
+            
         }
 
         setDescription(aux);
@@ -530,6 +525,7 @@ public class Netflix {
 
         int x = 0;
         Crud c = new Crud();
+        long pos;
         Scanner sc = new Scanner(System.in);
         do {
             System.out.println("\nOpcoes ");
@@ -589,6 +585,11 @@ public class Netflix {
                 case 6:
                 LerBaseDeDadosInicial("teste2.csv", "teste.db");
                     break;
+
+                case 7:
+                   //pos = c.Achar(7);
+                   //System.out.println(pos);
+                    break;    
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);

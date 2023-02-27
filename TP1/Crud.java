@@ -15,6 +15,7 @@ public class Crud {
     public long[] getPosicoes() {
         return posicoes;
     }
+
     public void preCreate() throws IOException
     {
         Scanner sc= new Scanner(System.in);
@@ -102,6 +103,46 @@ public class Crud {
         arq.close();
     }
 
+    public long Achar(int IdLegal) throws IOException {
+        long pos = 0;
+        char c;
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        int len = arq.readInt();
+        int x = 0;
+        byte[] ba;
+
+         while (x < len) {
+            c = arq.readChar();
+            if (c != '*') {
+                int length = arq.readInt();
+                
+                ba = new byte[length];
+                arq.read(ba);
+                
+                Netflix net_temp = new Netflix();
+                net_temp.fromByteArray(ba);
+             
+                if (IdLegal == net_temp.Id) {
+                    pos = arq.getFilePointer();
+                    arq.close();
+                    return pos;
+                }
+                
+            }
+            else
+            {
+                int length = arq.readInt();
+                arq.skipBytes(length);
+            }
+           
+            x++;
+        }
+        arq.close();
+        return -1;
+
+    
+    }
+
     public Netflix  read(int IdLegal) throws IOException {
         int len = 0;
         char c;
@@ -122,14 +163,14 @@ public class Crud {
         while (x < len) {
             c = arq.readChar();
             if (c != '*') {
-                System.out.println("Talvez");
                 int length = arq.readInt();
+                
                 ba = new byte[length];
                 arq.read(ba);
-                System.out.println("Talvez");
+                
                 Netflix net_temp = new Netflix();
                 net_temp.fromByteArray(ba);
-                System.out.println("Cheguei aqui");
+             
                 if (IdLegal == net_temp.Id) {
                     arq.close();
                     return net_temp;
@@ -138,15 +179,82 @@ public class Crud {
             }
             else
             {
-                System.out.println(x + " TESTE LEGAL" );
+                int length = arq.readInt();
+                arq.skipBytes(length);
             }
-            System.out.println(x+" ");
+           
             x++;
         }
         arq.close();
         return null;
 
     
+    }
+
+
+    public boolean uptate (int Id) throws IOException{
+
+        long result = Achar(Id);
+    
+        Scanner sc= new Scanner(System.in);
+        
+        String Type = "";
+        String Name = "";
+        String[] Cast = null;
+        Data Data_added = new Data();
+        int min = 0;
+        int seasons = 0;
+        String[] Listed_in = null;
+        String Description = "";
+        int Num_cast = 0;
+        int Num_Listed_in = 0;
+
+        System.out.println("Insira as informacaoes a seguir: \nType: ");
+        Type = sc.nextLine();
+        System.out.println("\nName: ");
+        Name = sc.nextLine();
+        System.out.println("\nQuantos atores: ");
+        Num_cast = sc.nextInt();
+        Cast = new String[Num_cast];
+        sc.nextLine();
+        for (int i = 0; i <Num_cast; i++) {
+            System.out.println("\nCast[" + i + "] :");
+            
+            Cast[i] = sc.nextLine();
+        }
+        System.out.println("\nMes: ");
+        Data_added.setMes(sc.nextLine());
+        System.out.println("\nDia: ");
+        Data_added.setDia(sc.nextInt());
+        System.out.println("\nAno: ");
+        Data_added.setAno(sc.nextInt());
+        if (Type.charAt(0) == 'T') {
+            System.out.println("\nSeasons: ");
+            seasons = sc.nextInt();
+        }
+        else{
+            System.out.println("\nMin: ");
+            min = sc.nextInt();
+        }
+
+        System.out.println("\nQuantas categorias: ");
+        Num_Listed_in = sc.nextInt();
+        Listed_in = new String[Num_Listed_in];
+        sc.nextLine();
+        for (int i = 0; i <Num_Listed_in; i++) {
+            System.out.println("\nNum_Listed_in[" + i + "] :");
+            Listed_in[i] = sc.nextLine();
+        }
+        System.out.println("\nDescrition: ");
+        Description = sc.nextLine();
+
+        
+        Netflix net = new Netflix(0, Type, Name, Cast,
+        Data_added, min, seasons, Listed_in, Description);
+         
+        create(net);
+
+        return false;
     }
 
     public boolean delete(int IdLegal) throws IOException
@@ -170,12 +278,13 @@ public class Crud {
                 ba = new byte[length];
                 arq.read(ba);
                 Netflix net_temp = new Netflix();
+
                 net_temp.fromByteArray(ba);
                 if (IdLegal == net_temp.Id) {
                     System.out.println("teste");
                     arq.seek(pos);
                     arq.writeChar('*');
-                    arq.close();
+                    
                     
                     return true;
                    
@@ -185,7 +294,7 @@ public class Crud {
 
             x++;
         }
-        arq.close();
+        
         System.out.println("teste1");
         return false;
     }
