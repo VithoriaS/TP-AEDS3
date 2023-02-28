@@ -530,7 +530,7 @@ public class Netflix {
                     
                     break;
                 case 1:
-                    c.preCreate();
+                    c.create();
                     break;
                 case 2:
                     System.out.println("Qual Id deseja procurar:");
@@ -545,14 +545,16 @@ public class Netflix {
 
                     break;
                 case 3:
-                    
+                System.out.println("Qual Id deseja Update:");
+                int Num = sc.nextInt();
+                c.uptate(Num);
                     break;
                 case 4:
 
                 System.out.println("Qual Id deseja Deletar:");
-                    int Num = sc.nextInt();
+                    int Num2 = sc.nextInt();
    
-                    Boolean b1 = c.delete(Num);
+                    Boolean b1 = c.delete(Num2);
 
                     if (b1) {
                         System.out.println("Deletado");
