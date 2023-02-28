@@ -249,10 +249,10 @@ public class Crud {
         Description = sc.nextLine();
 
         
-        Netflix net = new Netflix(0, Type, Name, Cast,
-        Data_added, min, seasons, Listed_in, Description);
+       // Netflix net = new Netflix(0, Type, Name, Cast,
+        //Data_added, min, seasons, Listed_in, Description);
          
-        create(net);
+        //create(net);
 
         return false;
     }

@@ -6,19 +6,22 @@ import java.io.DataOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Date;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.lang.model.util.ElementScanner14;
 
 public class Netflix {
     char lapide;
     int Id = 0;
     String Type = "";
     String Name = "";
-    String[] Cast = new String[0];
+    String[] Cast = null;
     Data Data_added = new Data();
     int min = 0;
     int seasons = 0;
-    String[] Listed_in = new String[0];
+    String[] Listed_in = null;
     String Description = "";
     //teste
     public Netflix(int id, String type, String name, String[] cast, Data data_added, int min, int seasons,
@@ -150,25 +153,22 @@ public class Netflix {
         Description = description;
     }
 
+
     public byte[] toByteArray() throws IOException {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
-       // dos.writeChar(' ');
+        dos.writeChar(' ');
         dos.writeInt(Id);
-        // System.out.println("ID: " + Id);
-        //dos.writeInt(Type.length());
-        // System.out.println("TYPE.length(): " + Type.length());
-        // System.out.println("TYPE: " + Type);
+        // tipo
         dos.writeUTF(Type);
-
-        //dos.writeInt(Name.length());
-        // System.out.println("TYPE.length(): " + Name.length());
-        // System.out.println("TYPE: " + Name);
+        // name
         dos.writeUTF(Name);
 
-       
+        if (Cast == null) {
+            dos.writeInt(0);
+        } else {
             dos.writeInt(Cast.length);
             // System.out.println("Cast.length: " + Cast.length);
             for (int i = 0; i < Cast.length; i++) {
@@ -177,19 +177,15 @@ public class Netflix {
                 // System.out.println("Cast[i]: " + Cast[i]);
                 dos.writeUTF(Cast[i]);
             }
-        
+        }
 
-      //  dos.writeInt(Data_added.getMes().length());
-        // System.out.println("Data_added.getMes().length(): " +
-        // Data_added.getMes().length() );
-        // System.out.println("Data_added.getMes(): " + Data_added.getMes() );
-        // System.out.println("Data_added.getdia(): " + Data_added.getDia() );
-        // System.out.println("Data_added.getano(): " + Data_added.getAno() );
         dos.writeUTF(Data_added.getMes());
         dos.writeInt(Data_added.getDia());
         dos.writeInt(Data_added.getAno());
 
-      
+        if (Listed_in == null) {
+            dos.writeInt(0);
+        } else {
             dos.writeInt(Listed_in.length);
             // System.out.println("Listed_in.length: " + Listed_in.length);
             for (int i = 0; i < Listed_in.length; i++) {
@@ -198,62 +194,48 @@ public class Netflix {
                 // System.out.println("Listed_in[i]: " + Listed_in[i]);
                 dos.writeUTF(Listed_in[i]);
             }
-        
+        }
 
-        // System.out.println("Description.length(): " + Description.length());
-        //dos.writeInt(Description.length());
-        // System.out.println("Description: " + Description);
         dos.writeUTF(Description);
 
         return baos.toByteArray();
     }
 
     public void fromByteArray(byte ba[]) throws IOException {
-
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
 
-        //lapide = dis.readChar();
+        lapide = dis.readChar();
         Id = dis.readInt();
-        // System.out.println(Id);
-       // dis.readInt();
-        
         Type = dis.readUTF();
-        // System.out.println(Type);
-        //dis.readInt();
         Name = dis.readUTF();
-        // System.out.println(Name);
-        int x = dis.readInt();
-        Cast = new String[x];
-        for (int i = 0; i < x; i++) {
-            //dis.readInt();
+
+        int length = dis.readInt();
+        Cast = new String[length];
+        for (int i = 0; i < length; i++) {
             Cast[i] = dis.readUTF();
-            // System.out.println(Cast[i]);
         }
-
-       // dis.readInt();
-        Data_added.setMes(dis.readUTF());
-        // System.out.println(Data_added.getMes());
-        Data_added.setDia(dis.readInt());
-        // System.out.println(Data_added.getDia());
-        Data_added.setAno(dis.readInt());
-        // System.out.println(Data_added.getAno());
-
-        int teste = dis.readInt();
-
-        Listed_in = new String[teste];
-        for (int i = 0; i < teste; i++) {
-           // dis.readInt();
+            
+              // dis.readInt();
+              Data_added.setMes(dis.readUTF());
+              // System.out.println(Data_added.getMes());
+              Data_added.setDia(dis.readInt());
+              // System.out.println(Data_added.getDia());
+              Data_added.setAno(dis.readInt());
+              // System.out.println(Data_added.getAno());
+        
+        length = dis.readInt();
+        Listed_in = new String[length];
+        for(int i = 0; i < length; i++) {
             Listed_in[i] = dis.readUTF();
-            // System.out.println(Listed_in[i]);
         }
 
-       // dis.readInt();
         Description = dis.readUTF();
-        // System.out.println( Description);
-
     }
 
+
+
+    
     public Netflix(String str) {
 
         String[] Cast = new String[0];
