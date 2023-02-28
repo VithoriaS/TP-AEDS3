@@ -208,6 +208,7 @@ public class Crud {
         String Description = "";
         int Num_cast = 0;
         int Num_Listed_in = 0;
+        byte[] ba;
 
         System.out.println("Insira as informacaoes a seguir: \nType: ");
         Type = sc.nextLine();
@@ -249,9 +250,12 @@ public class Crud {
         Description = sc.nextLine();
 
         
-       // Netflix net = new Netflix(0, Type, Name, Cast,
-        //Data_added, min, seasons, Listed_in, Description);
-         
+        Netflix net = new Netflix(Id, Type, Name, Cast,
+        Data_added, min, seasons, Listed_in, Description);
+       ba =  net.toByteArray();
+       RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+         arq.seek(result);
+         arq.write(ba);
         //create(net);
 
         return false;
