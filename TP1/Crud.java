@@ -273,6 +273,10 @@ public class Crud {
                 }
 
             }
+            else{
+                int length = arq.readInt();
+                arq.skipBytes(length);
+            }
             x++;
     }
         return false;
@@ -311,6 +315,10 @@ public class Crud {
                    
                 }
                 
+            }
+            else{
+                int tamanho = arq.readInt();
+                arq.skipBytes(tamanho);
             }
 
             x++;

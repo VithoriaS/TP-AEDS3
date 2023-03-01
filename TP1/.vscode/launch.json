@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Netflix",
+      "request": "launch",
+      "mainClass": "Netflix",
+      "projectName": "TP1_b8b5c55f"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
