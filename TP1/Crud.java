@@ -302,11 +302,11 @@ public class Crud {
 
                 net_temp.fromByteArray(ba);
                 if (IdLegal == net_temp.Id) {
-                    System.out.println("teste");
+                    
                     arq.seek(pos);
                     arq.writeChar('*');
                     
-                    
+                    arq.close();
                     return true;
                    
                 }
@@ -317,6 +317,7 @@ public class Crud {
         }
         
         System.out.println("teste1");
+        arq.close();
         return false;
     }
 }
