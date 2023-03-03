@@ -16,12 +16,11 @@ public class intercalacaoBalanceada {
         long pos;
         int len = 0;
         len = arq.readInt();
-        ba = new byte[len];
-        arq.read(ba);
+
         int x = 0;
         int tamanho, tamanho1 = 0;
         boolean par = len % 2 == 0;
-
+        /*
         if (par) {
             tamanho = len / 2;
 
@@ -35,6 +34,46 @@ public class intercalacaoBalanceada {
         }
 
         String pos1, pos2, pos3, pos4;
+         */
+        // ---------------------------------------- ordenacao em memoria principal ----------------------------------------
+        int  y = 4; // quantos arquivos por vez 
+        
+        int k =0;
+        while (len < k) {
+            Netflix[] Netarray = new Netflix[y];
+
+            for (int i = 0; i < Netarray.length; i++) {
+                char c = arq.readChar();
+                int length = arq.readInt();
+
+                if (c != '*') {
+                    
+                    ba = new byte[length];
+                    arq.read(ba);
+                    Netflix net_temp = new Netflix();
+                    net_temp.fromByteArray(ba);
+                    Netarray[i] = net_temp;
+                }
+                else{
+                    arq.skipBytes(length);
+                }
+
+                k++;
+            }
+            ordernarLista(Netarray, 0, Netarray.length -1);
+            
+            for (int i = 0; i < Netarray.length; i++) {
+                byte[] ba2;
+                ba2 = Netarray[i].toByteArray();
+                if (k % 2 == 0) {
+                    
+                    arq1.write(ba2);
+                }
+                else{
+                    arq2.write(ba2);
+                }
+            }
+        }
 
     }
 

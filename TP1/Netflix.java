@@ -3,6 +3,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -79,6 +80,38 @@ public class Netflix {
 
         System.out.println("\nDescription: " + Description);
 
+    }
+
+    public static void apagarRegistro()
+    {
+        
+            try {
+                // Crie uma instância do objeto File com o caminho e nome do arquivo
+                File arquivo = new File("teste.db");
+    
+                // Verifique se o arquivo existe antes de tentar excluir
+                if (arquivo.exists()) {
+                    // Crie uma instância do objeto RandomAccessFile
+                    RandomAccessFile raf = new RandomAccessFile(arquivo, "rw");
+    
+                    // ... faça algo com o arquivo ...
+    
+                    // Feche o objeto RandomAccessFile
+                    raf.close();
+    
+                    // Exclua o arquivo usando o método delete()
+                    if (arquivo.delete()) {
+                        System.out.println("Arquivo excluído com sucesso!");
+                    } else {
+                        System.out.println("Não foi possível excluir o arquivo.");
+                    }
+                } else {
+                    System.out.println("O arquivo não existe.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        
     }
 
     public int getId() {
@@ -507,6 +540,7 @@ public class Netflix {
 
         int x = 0;
         Crud c = new Crud();
+        intercalacaoBalanceada ord = new intercalacaoBalanceada();
         long pos;
         Scanner sc = new Scanner(System.in);
         do {
@@ -518,6 +552,7 @@ public class Netflix {
             System.out.println(" 4 - Delete");
             System.out.println(" 5 - Ordernar");
             System.out.println(" 6 - Ler base de dados incial !CUIDADO! (So use se nao tiver arquivo)");
+            System.out.println(" 7 - Deletar Registro");
 
 
             System.out.println("Entrar com uma opcao:");
@@ -564,15 +599,15 @@ public class Netflix {
                     
                     break;
                 case 5:
-                    
+                    ord.ordencao();
                     break;
                 case 6:
                 LerBaseDeDadosInicial("teste2.csv", "teste.db");
                     break;
 
                 case 7:
-                   //pos = c.Achar(7);
-                   //System.out.println(pos);
+                apagarRegistro();
+                
                     break;    
 
                 default:
