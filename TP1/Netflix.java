@@ -55,6 +55,7 @@ public class Netflix {
         System.out.println("\nID: " + Id +
                 "\nType: " + Type +
                 "\nNome: " + Name);
+                /*
         if (Cast == null) {
 
         } else {
@@ -79,15 +80,16 @@ public class Netflix {
         }
 
         System.out.println("\nDescription: " + Description);
+        */
 
     }
 
-    public static void apagarRegistro()
+    public static void apagarRegistro(String FilePath)
     {
         
             try {
                 // Crie uma instância do objeto File com o caminho e nome do arquivo
-                File arquivo = new File("teste.db");
+                File arquivo = new File(FilePath);
     
                 // Verifique se o arquivo existe antes de tentar excluir
                 if (arquivo.exists()) {
@@ -540,7 +542,7 @@ public class Netflix {
 
         int x = 0;
         Crud c = new Crud();
-        intercalacaoBalanceada ord = new intercalacaoBalanceada();
+        ordenacao ord = new ordenacao();
         long pos;
         Scanner sc = new Scanner(System.in);
         do {
@@ -599,14 +601,17 @@ public class Netflix {
                     
                     break;
                 case 5:
-                    ord.ordencao();
+                    ord.ordencaoMemoriaPrimaria();
+                    ord.intercalacaoBalanceada(1000);
                     break;
                 case 6:
                 LerBaseDeDadosInicial("teste2.csv", "teste.db");
                     break;
 
                 case 7:
-                apagarRegistro();
+                System.out.println("Qual Arquivo deseja Deletar:");
+                String s1 = sc.next();
+                apagarRegistro(s1);
                 
                     break;    
 

@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "teste",
+      "request": "launch",
+      "mainClass": "teste",
+      "projectName": "TP1_b8b5c55f"
+    },
+    {
+      "type": "java",
       "name": "Netflix",
       "request": "launch",
       "mainClass": "Netflix",
