@@ -175,7 +175,7 @@ public class Crud {
     public Netflix  read(int IdLegal) throws IOException {
         int len = 0;
         char c = 'a';
-        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        RandomAccessFile arq = new RandomAccessFile("temp1.db", "rw");
         len = arq.readInt();
         int x = 0;
         byte[] ba;

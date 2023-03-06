@@ -77,10 +77,6 @@ public class ordenacao {
             paraOWhile = Netarray[Netarray.length - 1];
             ordernarLista(Netarray, 0, Netarray.length - 1);
 
-            for (int i = 0; i < Netarray.length; i++) {
-                Netarray[i].printar();
-            }
-            System.out.println(j);
 
             // colocando todos os 4 dados
             for (int i = 0; i < Netarray.length; i++) {
@@ -119,24 +115,22 @@ public class ordenacao {
         int len = 0;
         len = arq.readInt();
 
-        int x = 0;
-        int p = 0;
-        int tamanho = 0, tamanho1 = 0;
-        String aux = "";
 
         // boolean par = len1 % 2 == 0;
         int bloco = 0;
         int k = 0;
         byte ba[];
         int j = 0;
+        int p = 0;
         Netflix paraOWhile = new Netflix();
         Netflix[] Array1 = new Netflix[0];
         Netflix[] Array2 = new Netflix[0];
 
-        while (len  / y < bloco) {
+        while ( 3 > bloco) {
 
             if (len - k < y) {
                 Array1 = new Netflix[len - k];
+                Array2 = null;
             } else {
                 Array1 = new Netflix[y];
 
@@ -148,9 +142,10 @@ public class ordenacao {
                 }
             }
 
-            for (int i = 0; i < arq1.length(); i++) {
+
+            for (int i = 0; i < Array1.length; i++) {
                 char c = arq1.readChar();
-                // int length = arq1.readInt();
+                int tamanho = arq1.readInt();
 
                 if (c != '*') {
 
@@ -166,10 +161,10 @@ public class ordenacao {
                 k++;
             }
 
-            for (int i = 0; i < arq2.length(); i++) {
+            for (int i = 0; i < Array2.length; i++) {
                 char c = arq2.readChar();
-                // length = arq2.readInt();
-                // int letraByte = arq2.read();
+                int tamanho1 = arq2.readInt();
+                
 
                 if (c != '*') {
 
@@ -185,53 +180,44 @@ public class ordenacao {
                 k++;
             }
 
+
+
             
                 while (j != Array1.length && p != Array2.length) {
 
                     if (bloco % 2 == 0) {
 
-                        boolean result = false;
 
                         if (Array1[j].getName().compareTo(Array2[p].getName()) > 0) {
-                            result = false;
-                        } else {
-                            result = true;
-                        }
-
-                        if (result) {
                             byte[] ba2;
                             ba2 = Array1[j].toByteArray();
                             arq3.write(ba2);
                             j++;
-                        } else if (!result) {
+                        } else {
                             byte[] ba2;
                             ba2 = Array2[p].toByteArray();
                             arq3.write(ba2);
                             p++;
                         }
+
 
                     } else {
 
-                        boolean result = false;
+                       
 
                         if (Array1[j].getName().compareTo(Array2[p].getName()) > 0) {
-                            result = false;
-                        } else {
-                            result = true;
-                        }
-
-                        if (result) {
                             byte[] ba2;
                             ba2 = Array1[j].toByteArray();
                             arq4.write(ba2);
                             j++;
-                        } else if (!result) {
+                        } else {
                             byte[] ba2;
                             ba2 = Array2[p].toByteArray();
                             arq4.write(ba2);
                             p++;
-
                         }
+
+                  
 
                     }
 
@@ -265,15 +251,15 @@ public class ordenacao {
                             j++;
                         }
                     }
-                    y += 1000;
-                    bloco++;
+                 
                 }
-
-            
-
+                bloco++;
+                System.out.println(bloco);
         }
-
+        
     }
+
+    
 
     public Netflix[] swap(Netflix netArr[], int x, int y) {
         Netflix temp = netArr[x];
