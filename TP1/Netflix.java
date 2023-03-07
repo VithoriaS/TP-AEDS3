@@ -240,7 +240,7 @@ public class Netflix {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis = new DataInputStream(bais);
 
-        //lapide = dis.readChar();
+        lapide = dis.readChar();
         Id = dis.readInt();
         Type = dis.readUTF();
         Name = dis.readUTF();
@@ -601,8 +601,8 @@ public class Netflix {
                     
                     break;
                 case 5:
-                   // ord.ordencaoMemoriaPrimaria();
-                    ord.intercalacaoBalanceada(1000);
+                    
+                    ord.LoopOrdenacao();
                     break;
                 case 6:
                 LerBaseDeDadosInicial("teste2.csv", "teste.db");
