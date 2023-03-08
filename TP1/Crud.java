@@ -130,47 +130,7 @@ public class Crud {
         arq.close();
     }
 
-    /* 
-    public long Achar(int IdLegal) throws IOException {
-        long pos = 0;
-        char c;
-        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
-        int len = arq.readInt();
-        int x = 0;
-        byte[] ba;
-
-         while (x < len) {
-            c = arq.readChar();
-            if (c != '*') {
-                int length = arq.readInt();
-                
-                ba = new byte[length];
-                arq.read(ba);
-                
-                Netflix net_temp = new Netflix();
-                net_temp.fromByteArray(ba);
-             
-                if (IdLegal == net_temp.Id) {
-                    pos = arq.getFilePointer();
-                    arq.close();
-                    return pos;
-                }
-                
-            }
-            else
-            {
-                int length = arq.readInt();
-                arq.skipBytes(length);
-            }
-           
-            x++;
-        }
-        arq.close();
-        return -1;
-
     
-    }
-*/
 
     public Netflix  read(int IdLegal) throws IOException {
         int len = 0;

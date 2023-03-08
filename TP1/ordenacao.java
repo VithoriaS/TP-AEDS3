@@ -12,35 +12,49 @@ public class ordenacao {
     int y = 0;
 
     public void LoopOrdenacao() throws IOException {
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        int len = 0;
+        len = arq.readInt();
+        arq.close();
         Scanner sc = new Scanner(System.in);
         System.out.println("Qual Valor De Y");
         y = sc.nextInt();
-        ordencaoMemoriaPrimaria();
-        int length = 0;
+       ordencaoMemoriaPrimaria();
+        
         int x = 0;
-        while (y < length) {
 
-            System.out.println("\nOpcoes ");
-            System.out.println(" 1 - Comum");
-            System.out.println(" 2 - BlocosTamanhoVariavel");
-            System.out.println(" 3 - SelecaoPorSubstituicao");
-            System.out.println("Entrar com uma opcao:");
-            x = sc.nextInt();
+        System.out.println("\nOpcoes ");
+        System.out.println(" 1 - Comum");
+        System.out.println(" 2 - BlocosTamanhoVariavel");
+        System.out.println(" 3 - SelecaoPorSubstituicao");
+        System.out.println("Entrar com uma opcao:");
+        x = sc.nextInt();
+        int i  = 0;
+        switch (x) {
+            case 1:
+            while (y < len) {
 
-            switch (x) {
-                case 1:
-                    intercalacaoComum();
-                    break;
-                case 2:
-                    intercalacaoBlocosTamanhoVariavel();
-                    break;
-                case 3:
-                    intercalacaoSelecaoPorSubstituicao();
-                    break;
-                default:
-                    break;
+                if (i%2 == 0) {
+                    intercalacaoComum2("temp1.db", "temp2.db", "temp3.db", "temp4.db");
+                } else {
+                    intercalacaoComum2("temp3.db", "temp4.db", "temp1.db", "temp2.db");
+                }
+
+                i++;
             }
+                
+                break;
+            case 2:
+          
+                intercalacaoBlocosTamanhoVariavel();
+                break;
+            case 3:
+                intercalacaoSelecaoPorSubstituicao();
+                break;
+            default:
+                break;
         }
+        sc.close();
     }
 
     public void ordencaoMemoriaPrimaria() throws IOException {
@@ -48,8 +62,7 @@ public class ordenacao {
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
         RandomAccessFile arq1 = new RandomAccessFile("temp1.db", "rw");
         RandomAccessFile arq2 = new RandomAccessFile("temp2.db", "rw");
-        RandomAccessFile arq3 = new RandomAccessFile("temp3.db", "rw");
-        RandomAccessFile arq4 = new RandomAccessFile("temp4.db", "rw");
+     
         int tamanhoArq1 = 0, tamanhoArq2 = 0;
         byte ba[];
         long pos;
@@ -135,202 +148,228 @@ public class ordenacao {
         arq.close();
         arq1.close();
         arq2.close();
-        arq3.close();
-        arq4.close();
+   
 
     }
 
-    public void intercalacaoComum() throws IOException {
+  
+    public void intercalacaoComum2(String R1, String R2, String W1 ,String W2  ) throws IOException {
 
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
-        RandomAccessFile arq1 = new RandomAccessFile("temp1.db", "rw");
-        RandomAccessFile arq2 = new RandomAccessFile("temp2.db", "rw");
-        RandomAccessFile arq3 = new RandomAccessFile("temp3.db", "rw");
-        RandomAccessFile arq4 = new RandomAccessFile("temp4.db", "rw");
+        RandomAccessFile arq1 = new RandomAccessFile(R1, "rw");
+        RandomAccessFile arq2 = new RandomAccessFile(R2, "rw");
+        RandomAccessFile arq5 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq6 = new RandomAccessFile(W2, "rw");
+        arq5.setLength(0);
+        arq6.setLength(0);
+        arq5.close();
+        arq6.close();
+        RandomAccessFile arq3 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq4 = new RandomAccessFile(W2, "rw");
 
         int len = 0;
         len = arq.readInt();
 
-        // boolean par = len1 % 2 == 0;
         int bloco = 0;
         int k = 0;
         byte ba[];
+        byte ba2[];
         int j = 0;
         int p = 0;
-        Netflix paraOWhile = new Netflix();
-        Netflix[] Array1 = new Netflix[0];
-        Netflix[] Array2 = new Netflix[0];
+        long pos1 = 0;
+        long pos2 = 0;
+
         int numeroLoco = 0;
         numeroLoco = len / y;
         if (len % y > 0) {
             numeroLoco++;
         }
-        System.out.println(numeroLoco);
-        
+        int limite1 = 0;
+        int limite2 = 0;
+        System.out.println(y);
         while (numeroLoco > bloco) {
 
             j = 0;
             p = 0;
             if (len - k < y) {
-                Array1 = new Netflix[len - k];
-                Array2 = new Netflix[0];
+                limite1 = len - k;
+                limite2 = 0;
 
             } else {
-                Array1 = new Netflix[y];
+                limite1 = y;
 
-                if (len - k < y) {
-                    Array2 = new Netflix[len - k];
+                if ((len - k ) -y < y) {
+
+                    limite2 = len - k;
+                    if (len < y*2) {
+                        limite2 = len - y;
+                    }
+                   
+                   
                 } else {
-                    Array2 = new Netflix[y];
-
+                    limite2 = y;
                 }
             }
 
-            for (int i = 0; i < Array1.length; i++) {
-                char c = arq1.readChar();
-                int tamanho = arq1.readInt();
+            if (bloco % 2 == 0) {
 
-                if (c != '*') {
+                while (j != limite1 && p != limite2) {
+
+                    pos1 = arq1.getFilePointer();
+                    char c = arq1.readChar();
+                    int tamanho = arq1.readInt();
 
                     ba = new byte[tamanho];
                     arq1.read(ba);
-                    Netflix net_temp = new Netflix();
-                    net_temp.fromByteArray(ba);
-                    Array1[i] = net_temp;
-                } else {
-                    arq1.skipBytes(tamanho);
-                }
+                    Netflix net_temp1 = new Netflix();
+                    net_temp1.fromByteArray(ba);
 
-                k++;
-            }
 
-            for (int i = 0; i < Array2.length; i++) {
-                char c = arq2.readChar();
-                int tamanho1 = arq2.readInt();
 
-                if (c != '*') {
+                    pos2 =  arq2.getFilePointer();
+                    try {
+                        char c2 = arq2.readChar();
+                    } catch (Exception e) {
+                        System.out.println("Teste");
+                    }
+                    int tamanho2 = arq2.readInt();
+                    ba2 = new byte[tamanho2];
+                    arq2.read(ba2);
 
-                    ba = new byte[tamanho1];
-                    arq2.read(ba);
-                    Netflix net_temp = new Netflix();
-                    net_temp.fromByteArray(ba);
-                    Array2[i] = net_temp;
-                } else {
-                    arq2.skipBytes(tamanho1);
-                }
+                    Netflix net_temp2 = new Netflix();
+                    net_temp2.fromByteArray(ba2);
+                    
 
-                k++;
-            }
-
-            if (Array2.length == 0) {
-                if (bloco % 2 == 0) {
-                    for (int i = 0; i < Array1.length; i++) {
-                        byte[] ba2;
-                        ba2 = Array1[i].toByteArray();
+                    if (net_temp1.getName().compareTo(net_temp2.getName()) > 0) {
+                        byte[] ba3;
+                        ba3 = net_temp1.toByteArray();
                         arq3.writeChar(' ');
-                        arq3.writeInt(ba2.length);
-                        arq3.write(ba2);
+                        arq3.writeInt(ba3.length);
+                        arq3.write(ba3);
+                        arq2.seek(pos2);
+                        j++;
+                    } else {
+                        byte[] ba3;
+                        ba3 = net_temp2.toByteArray();
+                        arq3.writeChar(' ');
+                        arq3.writeInt(ba3.length);
+                        arq3.write(ba3);
+                        arq1.seek(pos1);
+                        p++;
                     }
-                } else {
-                    for (int i = 0; i < Array1.length; i++) {
-                        byte[] ba2;
-                        ba2 = Array1[i].toByteArray();
-                        arq4.writeChar(' ');
-                        arq4.writeInt(ba2.length);
-                        arq4.write(ba2);
-                    }
+                    k++;
                 }
-                bloco++;
+
             } else {
 
-                if (bloco % 2 == 0) {
+                while (j != limite1 && p != limite2) {
+                    pos1 =  arq1.getFilePointer();
+                    char c = arq1.readChar();
+                    int tamanho = arq1.readInt();
+                    ba = new byte[tamanho];
+                    arq1.read(ba);
+                    Netflix net_temp1 = new Netflix();
+                    net_temp1.fromByteArray(ba);
 
-                    while (j != Array1.length && p != Array2.length) {
-                        if (Array1[j].getName().compareTo(Array2[p].getName()) > 0) {
-                            byte[] ba2;
-                            ba2 = Array1[j].toByteArray();
-                            arq3.writeChar(' ');
-                            arq3.writeInt(ba2.length);
-                            arq3.write(ba2);
-                            j++;
-                        } else {
-                            byte[] ba2;
-                            ba2 = Array2[p].toByteArray();
-                            arq3.writeChar(' ');
-                            arq3.writeInt(ba2.length);
-                            arq3.write(ba2);
-                            p++;
-                        }
-                    }
 
-                } else {
+                    pos2 =  arq2.getFilePointer();
+                    char c2 = arq2.readChar();
+                    int tamanho2 = arq2.readInt();
 
-                    while (j != Array1.length && p != Array2.length) {
-                        if (Array1[j].getName().compareTo(Array2[p].getName()) > 0) {
-                            byte[] ba2;
-                            ba2 = Array1[j].toByteArray();
-                            arq4.writeChar(' ');
-                            arq4.writeInt(ba2.length);
-                            arq4.write(ba2);
-                            j++;
-                        } else {
-                            byte[] ba2;
-                            ba2 = Array2[p].toByteArray();
-                            arq4.writeChar(' ');
-                            arq4.writeInt(ba2.length);
-                            arq4.write(ba2);
-                            p++;
-                        }
+                    ba2 = new byte[tamanho2];
+                    arq2.read(ba2);
+                    Netflix net_temp2 = new Netflix();
+                    net_temp2.fromByteArray(ba2);
 
-                    }
-
-                }
-                // caso algum arquivo for maior que o outro irá terminar de escrever
-                if (bloco % 2 == 0) {
-                    while (j != Array1.length) {
-                        byte[] ba2;
-                        ba2 = Array1[j].toByteArray();
-                        arq3.writeChar(' ');
-                        arq3.writeInt(ba2.length);
-                        arq3.write(ba2);
+                    if (net_temp1.getName().compareTo(net_temp2.getName()) > 0) {
+                        byte[] ba3;
+                        ba3 = net_temp1.toByteArray();
+                        arq4.writeChar(' ');
+                        arq4.writeInt(ba3.length);
+                        arq4.write(ba3);
+                        arq2.seek(pos2);
                         j++;
-                    }
-
-                    while (p != Array2.length) {
-                        byte[] ba2;
-                        ba2 = Array2[p].toByteArray();
-                        arq3.writeChar(' ');
-                        arq3.writeInt(ba2.length);
-                        arq3.write(ba2);
+                    } else {
+                        byte[] ba3;
+                        ba3 = net_temp2.toByteArray();
+                        arq4.writeChar(' ');
+                        arq4.writeInt(ba3.length);
+                        arq4.write(ba3);
+                        arq1.seek(pos1);
                         p++;
                     }
-                } else {
-                    while (j != Array1.length) {
-                        byte[] ba2;
-                        ba2 = Array1[j].toByteArray();
-                        arq4.writeChar(' ');
-                        arq4.writeInt(ba2.length);
-                        arq4.write(ba2);
-                        j++;
-                    }
-
-                    while (p != Array2.length) {
-                        byte[] ba2;
-                        ba2 = Array2[p].toByteArray();
-                        arq4.writeChar(' ');
-                        arq4.writeInt(ba2.length);
-                        arq4.write(ba2);
-                        p++;
-                    }
+                    k++;
                 }
 
             }
+            // caso algum arquivo for maior que o outro irá terminar de escrever
+            if (bloco % 2 == 0) {
+                while (j != limite1) {
+                    char c = arq1.readChar();
+                    int tamanho = arq1.readInt();
+                    ba = new byte[tamanho];
+                    arq1.read(ba);
+                    arq3.writeChar(' ');
+                    arq3.writeInt(ba.length);
+                    arq3.write(ba);
+                    
+                    j++;
+                    k++;
+
+                }
+               
+                while (p != limite2) {
+                    char c = arq2.readChar();
+                    int tamanho = arq2.readInt();
+                    ba = new byte[tamanho];
+                    arq2.read(ba);
+                    arq3.writeChar(' ');
+                    arq3.writeInt(ba.length);
+                    arq3.write(ba);
+                    
+                    p++;
+                    k++;
+
+                }
+            } else {
+                while (j != limite1) {
+                    char c = arq1.readChar();
+                    int tamanho = arq1.readInt();
+                    ba = new byte[tamanho];
+                    arq1.read(ba);
+                    arq4.writeChar(' ');
+                    arq4.writeInt(ba.length);
+                    arq4.write(ba);
+                    j++;
+                    k++;
+
+                }
+
+                while (p != limite2) {
+                    char c = arq2.readChar();
+                    int tamanho = arq2.readInt();
+                    ba = new byte[tamanho];
+                    arq2.read(ba);
+                    arq4.writeChar(' ');
+                    arq4.writeInt(ba.length);
+                    arq4.write(ba);
+                    p++;
+                    k++;
+
+                }
+            }
+
             bloco++;
 
             System.out.println(bloco);
         }
 
         y = y + y;
+        arq.close();
+        arq1.close();
+        arq2.close();
+        arq3.close();
+        arq4.close();
     }
 
     public void intercalacaoBlocosTamanhoVariavel() {
