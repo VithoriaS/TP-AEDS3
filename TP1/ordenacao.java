@@ -165,20 +165,12 @@ public class ordenacao {
         arq6.setLength(0);
         arq5.close();
         arq6.close();
-        RandomAccessFile arq7 = new RandomAccessFile(W1, "rw");
-        RandomAccessFile arq8 = new RandomAccessFile(W2, "rw");
-       
-        arq7.writeInt(1);
-        arq8.writeInt(1);
-        arq7.close();
-        arq8.close();
-
         RandomAccessFile arq3 = new RandomAccessFile(W1, "rw");
         RandomAccessFile arq4 = new RandomAccessFile(W2, "rw");
-        arq3.readInt();
-        arq4.readInt();
-        arq1.readInt();
-        arq2.readInt();
+        arq3.writeInt(-1);
+        arq4.writeInt(-1);
+        arq1.skipBytes(4);
+        arq2.skipBytes(4);
 
         int len = 0;
         len = arq.readInt();
@@ -209,27 +201,7 @@ public class ordenacao {
             p = 0;
             limite1 = tamanhoR1;
             limite2 = tamanhoR2;
-            /*
-             * if (len - k < y) {
-             * limite1 = len - k;
-             * limite2 = 0;
-             * 
-             * } else {
-             * limite1 = y;
-             * 
-             * if ((len - k ) -y < y) {
-             * 
-             * limite2 = len - k;
-             * if (len < y*2) {
-             * limite2 = len - y;
-             * }
-             * 
-             * 
-             * } else {
-             * limite2 = y;
-             * }
-             * }
-             */
+
 
             if (bloco % 2 == 0) {
 
@@ -378,6 +350,7 @@ public class ordenacao {
                     
                     try {
                         ba = new byte[tamanho];
+                        arq2.read(ba);
                         Netflix net_temp1 = new Netflix();
                         net_temp1.fromByteArray(ba);
                         creatOrd(arq4, net_temp1);
