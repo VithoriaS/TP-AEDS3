@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.FileWriter;
 
 public class ordenacao {
     int y = 0;
+    int tamanhoR1 = 0, tamanhoR2 = 0;
 
     public void LoopOrdenacao() throws IOException {
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
@@ -19,8 +21,8 @@ public class ordenacao {
         Scanner sc = new Scanner(System.in);
         System.out.println("Qual Valor De Y");
         y = sc.nextInt();
-       ordencaoMemoriaPrimaria();
-        
+        ordencaoMemoriaPrimaria();
+
         int x = 0;
 
         System.out.println("\nOpcoes ");
@@ -29,23 +31,23 @@ public class ordenacao {
         System.out.println(" 3 - SelecaoPorSubstituicao");
         System.out.println("Entrar com uma opcao:");
         x = sc.nextInt();
-        int i  = 0;
+        int i = 0;
         switch (x) {
             case 1:
-            while (y < len) {
+                while (y < len) {
 
-                if (i%2 == 0) {
-                    intercalacaoComum2("temp1.db", "temp2.db", "temp3.db", "temp4.db");
-                } else {
-                    intercalacaoComum2("temp3.db", "temp4.db", "temp1.db", "temp2.db");
+                    if (i % 2 == 0) {
+                        intercalacaoComum2("temp1.db", "temp2.db", "temp3.db", "temp4.db");
+                    } else {
+                        intercalacaoComum2("temp3.db", "temp4.db", "temp1.db", "temp2.db");
+                    }
+
+                    i++;
                 }
 
-                i++;
-            }
-                
                 break;
             case 2:
-          
+
                 intercalacaoBlocosTamanhoVariavel();
                 break;
             case 3:
@@ -54,7 +56,7 @@ public class ordenacao {
             default:
                 break;
         }
-        sc.close();
+
     }
 
     public void ordencaoMemoriaPrimaria() throws IOException {
@@ -62,13 +64,13 @@ public class ordenacao {
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
         RandomAccessFile arq1 = new RandomAccessFile("temp1.db", "rw");
         RandomAccessFile arq2 = new RandomAccessFile("temp2.db", "rw");
-     
-        int tamanhoArq1 = 0, tamanhoArq2 = 0;
+
         byte ba[];
         long pos;
         int len = 0;
         len = arq.readInt();
-
+        arq1.writeInt(-1);
+        arq2.writeInt(-1);
         int x = 0;
         int tamanho, tamanho1 = 0;
         boolean par = len % 2 == 0;
@@ -132,12 +134,12 @@ public class ordenacao {
                     arq1.writeChar(' ');
                     arq1.writeInt(ba2.length);
                     arq1.write(ba2);
-                    tamanhoArq1++;
+                    tamanhoR1++;
                 } else {
                     arq2.writeChar(' ');
                     arq2.writeInt(ba2.length);
                     arq2.write(ba2);
-                    tamanhoArq2++;
+                    tamanhoR2++;
                 }
             }
 
@@ -145,15 +147,14 @@ public class ordenacao {
             j++;
 
         }
+        System.out.println(tamanhoR1 + "aa " + tamanhoR2);
         arq.close();
         arq1.close();
         arq2.close();
-   
 
     }
 
-  
-    public void intercalacaoComum2(String R1, String R2, String W1 ,String W2  ) throws IOException {
+    public void intercalacaoComum2(String R1, String R2, String W1, String W2) throws IOException {
 
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
         RandomAccessFile arq1 = new RandomAccessFile(R1, "rw");
@@ -164,21 +165,35 @@ public class ordenacao {
         arq6.setLength(0);
         arq5.close();
         arq6.close();
+        RandomAccessFile arq7 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq8 = new RandomAccessFile(W2, "rw");
+       
+        arq7.writeInt(1);
+        arq8.writeInt(1);
+        arq7.close();
+        arq8.close();
+
         RandomAccessFile arq3 = new RandomAccessFile(W1, "rw");
         RandomAccessFile arq4 = new RandomAccessFile(W2, "rw");
+        arq3.readInt();
+        arq4.readInt();
+        arq1.readInt();
+        arq2.readInt();
 
         int len = 0;
         len = arq.readInt();
 
         int bloco = 0;
-        int k = 0;
+        int k1 = 0;
+        int k2 = 0;
         byte ba[];
         byte ba2[];
         int j = 0;
         int p = 0;
         long pos1 = 0;
         long pos2 = 0;
-
+        
+      
         int numeroLoco = 0;
         numeroLoco = len / y;
         if (len % y > 0) {
@@ -187,33 +202,38 @@ public class ordenacao {
         int limite1 = 0;
         int limite2 = 0;
         System.out.println(y);
+        
         while (numeroLoco > bloco) {
 
             j = 0;
             p = 0;
-            if (len - k < y) {
-                limite1 = len - k;
-                limite2 = 0;
-
-            } else {
-                limite1 = y;
-
-                if ((len - k ) -y < y) {
-
-                    limite2 = len - k;
-                    if (len < y*2) {
-                        limite2 = len - y;
-                    }
-                   
-                   
-                } else {
-                    limite2 = y;
-                }
-            }
+            limite1 = tamanhoR1;
+            limite2 = tamanhoR2;
+            /*
+             * if (len - k < y) {
+             * limite1 = len - k;
+             * limite2 = 0;
+             * 
+             * } else {
+             * limite1 = y;
+             * 
+             * if ((len - k ) -y < y) {
+             * 
+             * limite2 = len - k;
+             * if (len < y*2) {
+             * limite2 = len - y;
+             * }
+             * 
+             * 
+             * } else {
+             * limite2 = y;
+             * }
+             * }
+             */
 
             if (bloco % 2 == 0) {
 
-                while (j != limite1 && p != limite2) {
+                while (j != y && p != y && k1 < limite1 && k2 < limite2 && arq2.getFilePointer() != arq2.length()) {
 
                     pos1 = arq1.getFilePointer();
                     char c = arq1.readChar();
@@ -224,9 +244,7 @@ public class ordenacao {
                     Netflix net_temp1 = new Netflix();
                     net_temp1.fromByteArray(ba);
 
-
-
-                    pos2 =  arq2.getFilePointer();
+                    pos2 = arq2.getFilePointer();
                     try {
                         char c2 = arq2.readChar();
                     } catch (Exception e) {
@@ -238,32 +256,30 @@ public class ordenacao {
 
                     Netflix net_temp2 = new Netflix();
                     net_temp2.fromByteArray(ba2);
-                    
 
                     if (net_temp1.getName().compareTo(net_temp2.getName()) > 0) {
-                        byte[] ba3;
-                        ba3 = net_temp1.toByteArray();
-                        arq3.writeChar(' ');
-                        arq3.writeInt(ba3.length);
-                        arq3.write(ba3);
+                        
+                        creatOrd(arq3, net_temp1);
+                        
                         arq2.seek(pos2);
                         j++;
+                        k1++;
                     } else {
-                        byte[] ba3;
-                        ba3 = net_temp2.toByteArray();
-                        arq3.writeChar(' ');
-                        arq3.writeInt(ba3.length);
-                        arq3.write(ba3);
+
+                        
+                        creatOrd(arq3, net_temp2);
                         arq1.seek(pos1);
+                        
                         p++;
+                        k2++;
                     }
-                    k++;
+
                 }
 
             } else {
 
-                while (j != limite1 && p != limite2) {
-                    pos1 =  arq1.getFilePointer();
+                while (j != y && p != y && k1 < limite1 && k2 < limite2 && arq2.getFilePointer() != arq2.length()) {
+                    pos1 = arq1.getFilePointer();
                     char c = arq1.readChar();
                     int tamanho = arq1.readInt();
                     ba = new byte[tamanho];
@@ -271,9 +287,12 @@ public class ordenacao {
                     Netflix net_temp1 = new Netflix();
                     net_temp1.fromByteArray(ba);
 
-
-                    pos2 =  arq2.getFilePointer();
-                    char c2 = arq2.readChar();
+                    pos2 = arq2.getFilePointer();
+                    try {
+                        char c2 = arq2.readChar();
+                    } catch (Exception e) {
+                        System.out.println("Teste");
+                    }
                     int tamanho2 = arq2.readInt();
 
                     ba2 = new byte[tamanho2];
@@ -282,79 +301,94 @@ public class ordenacao {
                     net_temp2.fromByteArray(ba2);
 
                     if (net_temp1.getName().compareTo(net_temp2.getName()) > 0) {
-                        byte[] ba3;
-                        ba3 = net_temp1.toByteArray();
-                        arq4.writeChar(' ');
-                        arq4.writeInt(ba3.length);
-                        arq4.write(ba3);
+                        
+                        creatOrd(arq4, net_temp1);
+                        
                         arq2.seek(pos2);
+                        k1++;
                         j++;
                     } else {
-                        byte[] ba3;
-                        ba3 = net_temp2.toByteArray();
-                        arq4.writeChar(' ');
-                        arq4.writeInt(ba3.length);
-                        arq4.write(ba3);
+                       
+                        creatOrd(arq4, net_temp2);
                         arq1.seek(pos1);
+                        
+                        k2++;
                         p++;
                     }
-                    k++;
+
                 }
 
             }
             // caso algum arquivo for maior que o outro irá terminar de escrever
             if (bloco % 2 == 0) {
-                while (j != limite1) {
+                while (j != y && limite1 > k1) {
                     char c = arq1.readChar();
                     int tamanho = arq1.readInt();
                     ba = new byte[tamanho];
                     arq1.read(ba);
-                    arq3.writeChar(' ');
-                    arq3.writeInt(ba.length);
-                    arq3.write(ba);
+                    Netflix net_temp1 = new Netflix();
+
+                    net_temp1.fromByteArray(ba);
+                   
+                    creatOrd(arq3, net_temp1);
                     
+
                     j++;
-                    k++;
+                    k1++;
 
                 }
-               
-                while (p != limite2) {
+
+                while (p != y && limite2 > k2 && arq2.getFilePointer() != arq2.length()) {
                     char c = arq2.readChar();
                     int tamanho = arq2.readInt();
                     ba = new byte[tamanho];
                     arq2.read(ba);
-                    arq3.writeChar(' ');
-                    arq3.writeInt(ba.length);
-                    arq3.write(ba);
+                    Netflix net_temp1 = new Netflix();
+
+                    net_temp1.fromByteArray(ba);
+                  
+                    creatOrd(arq3, net_temp1);
                     
+
                     p++;
-                    k++;
+                    k2++;
 
                 }
             } else {
-                while (j != limite1) {
+                while (j != y && limite1 > k1) {
                     char c = arq1.readChar();
                     int tamanho = arq1.readInt();
                     ba = new byte[tamanho];
                     arq1.read(ba);
-                    arq4.writeChar(' ');
-                    arq4.writeInt(ba.length);
-                    arq4.write(ba);
+                    Netflix net_temp1 = new Netflix();
+
+                    net_temp1.fromByteArray(ba);
+                   
+                    creatOrd(arq4, net_temp1);
+                
                     j++;
-                    k++;
+                    k1++;
 
                 }
 
-                while (p != limite2) {
+                while (p != y && limite2 > k2 && arq2.getFilePointer() != arq2.length()) {
                     char c = arq2.readChar();
+                    System.out.println(c);
                     int tamanho = arq2.readInt();
-                    ba = new byte[tamanho];
-                    arq2.read(ba);
-                    arq4.writeChar(' ');
-                    arq4.writeInt(ba.length);
-                    arq4.write(ba);
+                    
+                    try {
+                        ba = new byte[tamanho];
+                        Netflix net_temp1 = new Netflix();
+                        net_temp1.fromByteArray(ba);
+                        creatOrd(arq4, net_temp1);
+                    } catch (Exception e) {
+                        System.out.println("Breake");
+                    }
+
+                    
+                    
                     p++;
-                    k++;
+                    k2++;
 
                 }
             }
@@ -365,6 +399,8 @@ public class ordenacao {
         }
 
         y = y + y;
+        tamanhoR1 = k1;
+        tamanhoR2 = k2;
         arq.close();
         arq1.close();
         arq2.close();
@@ -412,6 +448,19 @@ public class ordenacao {
         netArr = swap(netArr, dir, i + 1);
 
         return (i + 1);
+    }
+
+    public static void creatOrd(RandomAccessFile arq, Netflix net_temp1) throws IOException {
+        byte[] ba3;
+        ba3 = net_temp1.toByteArray();
+        arq.writeChar(' ');
+        arq.writeInt(ba3.length);
+        arq.write(ba3);
+        long posTemp = arq.getFilePointer();
+        arq.seek(0);
+        arq.writeInt(net_temp1.getId());
+        arq.seek(posTemp);
+
     }
 
 }
