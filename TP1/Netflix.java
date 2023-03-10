@@ -52,10 +52,8 @@ public class Netflix {
     }
 
     public void printar() {
-        System.out.println("\nID: " + Id +
-                "\nType: " + Type +
-                "\nNome: " + Name);
-                /*
+  
+                
         if (Cast == null) {
 
         } else {
@@ -80,7 +78,7 @@ public class Netflix {
         }
 
         System.out.println("\nDescription: " + Description);
-        */
+        
 
     }
 
@@ -555,6 +553,7 @@ public class Netflix {
             System.out.println(" 5 - Ordernar");
             System.out.println(" 6 - Ler base de dados incial !CUIDADO! (So use se nao tiver arquivo)");
             System.out.println(" 7 - Deletar Registro");
+            System.out.println(" 8 - Ler tudo ");
 
 
             System.out.println("Entrar com uma opcao:");
@@ -605,15 +604,26 @@ public class Netflix {
                     ord.LoopOrdenacao();
                     break;
                 case 6:
-                LerBaseDeDadosInicial("teste3.csv", "teste.db", 147);
+                LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
                     break;
 
                 case 7:
                 System.out.println("Qual Arquivo deseja Deletar:");
                 String s1 = sc.next();
                 apagarRegistro(s1);
+
+
                 
-                    break;    
+                    break;   
+                    
+                    case 8:
+                
+               
+                c.readAll();
+
+                
+    
+                    break;  
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);

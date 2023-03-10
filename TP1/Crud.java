@@ -187,6 +187,60 @@ public class Crud {
     
     }
 
+    public Netflix  readAll() throws IOException {
+        int len = 0;
+        char c = 'a';
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        len = arq.readInt();
+        int x = 0;
+        byte[] ba;
+        
+        // len = total de ID's
+        // while ( id != len) {
+        // if ( lapide != '*') {
+        // pega obj ????
+        // se obj.id = IdLegal
+        // return obj e termina
+        // }
+        // } return null
+
+        Netflix net_temp = new Netflix();
+        while (net_temp.Id != len) { 
+            
+            try {
+                c = arq.readChar();
+            } catch (Exception e) {
+                System.out.println("TryCathc" + x + "TESTE"+  c + "TESTE");
+            }
+
+  
+            
+            int length = arq.readInt();
+            
+            if (c != '*') {
+                
+                ba = new byte[length];
+                arq.read(ba);
+                net_temp.fromByteArray(ba);
+             
+                System.out.println(net_temp.getName());
+                
+            }
+            else
+            {
+                arq.skipBytes(length);
+            }
+           
+            
+        }
+        arq.close();
+        return null;
+
+    
+    }
+
+
+
 
     public boolean uptate (int Id) throws IOException{
 
