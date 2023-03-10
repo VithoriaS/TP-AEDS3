@@ -205,7 +205,7 @@ public class ordenacao {
 
             if (bloco % 2 == 0) {
 
-                while (j != y && p != y && k1 < limite1 && k2 < limite2 && arq2.getFilePointer() != arq2.length()) {
+                while (j != y && p != y && k1 < limite1 && k2 < limite2 && arq2.getFilePointer() != arq2.length() && arq1.getFilePointer() != arq1.length()) {
 
                     pos1 = arq1.getFilePointer();
                     char c = arq1.readChar();
@@ -217,11 +217,9 @@ public class ordenacao {
                     net_temp1.fromByteArray(ba);
 
                     pos2 = arq2.getFilePointer();
-                    try {
+                  
                         char c2 = arq2.readChar();
-                    } catch (Exception e) {
-                        System.out.println("Teste");
-                    }
+                 
                     int tamanho2 = arq2.readInt();
                     ba2 = new byte[tamanho2];
                     arq2.read(ba2);
@@ -250,7 +248,7 @@ public class ordenacao {
 
             } else {
 
-                while (j != y && p != y && k1 < limite1 && k2 < limite2 && arq2.getFilePointer() != arq2.length()) {
+                while (j != y && p != y && k1 < limite1 && k2 < limite2 && arq2.getFilePointer() != arq2.length() && arq1.getFilePointer() != arq1.length()) {
                     pos1 = arq1.getFilePointer();
                     char c = arq1.readChar();
                     int tamanho = arq1.readInt();
@@ -260,11 +258,9 @@ public class ordenacao {
                     net_temp1.fromByteArray(ba);
 
                     pos2 = arq2.getFilePointer();
-                    try {
+                    
                         char c2 = arq2.readChar();
-                    } catch (Exception e) {
-                        System.out.println("Teste");
-                    }
+                    
                     int tamanho2 = arq2.readInt();
 
                     ba2 = new byte[tamanho2];
@@ -293,7 +289,7 @@ public class ordenacao {
             }
             // caso algum arquivo for maior que o outro irá terminar de escrever
             if (bloco % 2 == 0) {
-                while (j != y && limite1 > k1) {
+                while (j != y && limite1 > k1 && arq1.getFilePointer() != arq1.length()) {
                     char c = arq1.readChar();
                     int tamanho = arq1.readInt();
                     ba = new byte[tamanho];
@@ -309,7 +305,7 @@ public class ordenacao {
                     k1++;
 
                 }
-
+                
                 while (p != y && limite2 > k2 && arq2.getFilePointer() != arq2.length()) {
                     char c = arq2.readChar();
                     int tamanho = arq2.readInt();
@@ -327,7 +323,7 @@ public class ordenacao {
 
                 }
             } else {
-                while (j != y && limite1 > k1) {
+                while (j != y && limite1 > k1 && arq1.getFilePointer() != arq1.length()) {
                     char c = arq1.readChar();
                     int tamanho = arq1.readInt();
                     ba = new byte[tamanho];
@@ -345,18 +341,16 @@ public class ordenacao {
 
                 while (p != y && limite2 > k2 && arq2.getFilePointer() != arq2.length()) {
                     char c = arq2.readChar();
-                    System.out.println(c);
+                    
                     int tamanho = arq2.readInt();
                     
-                    try {
+                   
                         ba = new byte[tamanho];
                         arq2.read(ba);
                         Netflix net_temp1 = new Netflix();
                         net_temp1.fromByteArray(ba);
                         creatOrd(arq4, net_temp1);
-                    } catch (Exception e) {
-                        System.out.println("Breake");
-                    }
+
 
                     
                     

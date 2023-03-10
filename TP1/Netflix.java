@@ -512,22 +512,22 @@ public class Netflix {
         // System.out.println("\nTESTE8: " + Description);
     }
 
-    static public void LerBaseDeDadosInicial(String s1, String s2) throws IOException
+    static public void LerBaseDeDadosInicial(String s1, String s2, int NumRegistros) throws IOException
     {
-        Netflix[] net = new Netflix[8807];
+        Netflix[] net = new Netflix[NumRegistros];
         byte[] ba;
 
-        BufferedReader bf = new BufferedReader(new FileReader("teste2.csv"));
+        BufferedReader bf = new BufferedReader(new FileReader(s1));
 
-        for (int j = 0; j < 8807; j++) {
+        for (int j = 0; j < NumRegistros; j++) {
             net[j] = new Netflix(bf.readLine());
         }
         bf.close();
 
-        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        RandomAccessFile arq = new RandomAccessFile(s2, "rw");
         
-          arq.writeInt(8807);
-          for (int i = 0; i < 8807; i++) {
+          arq.writeInt(NumRegistros);
+          for (int i = 0; i < NumRegistros; i++) {
           ba = net[i].toByteArray();
           arq.writeChar(' ');
           arq.writeInt(ba.length);
@@ -605,7 +605,7 @@ public class Netflix {
                     ord.LoopOrdenacao();
                     break;
                 case 6:
-                LerBaseDeDadosInicial("teste2.csv", "teste.db");
+                LerBaseDeDadosInicial("teste3.csv", "teste.db", 147);
                     break;
 
                 case 7:
