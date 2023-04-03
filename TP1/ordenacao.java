@@ -86,7 +86,16 @@ public class ordenacao {
                 break;
             case 2:
 
-                intercalacaoBlocosTamanhoVariavel();
+            while (y < len) {
+
+                if (i % 2 == 0) {
+                    intercalacaoBlocosTamanhoVariavel("temp1.db", "temp2.db", "temp3.db", "temp4.db");
+                } else {
+                    intercalacaoBlocosTamanhoVariavel("temp3.db", "temp4.db", "temp1.db", "temp2.db");
+                }
+
+                i++;
+            };
                 break;
             case 3:
                 intercalacaoSelecaoPorSubstituicao();
@@ -132,9 +141,9 @@ public class ordenacao {
         int j = 0;
         Netflix paraOWhile = new Netflix();
         Netflix[] Netarray = new Netflix[0];
-
+       
         while (paraOWhile.getId() != len && k < len) {
-
+            int salvacao = 0;
             if (len - k < y) {
                 Netarray = new Netflix[len - k];
             } else {
@@ -154,17 +163,21 @@ public class ordenacao {
                     Netarray[i] = net_temp;
                 } else {
                     arq.skipBytes(length);
+                    salvacao++;
                 }
 
                 k++;
             }
 
-            paraOWhile = Netarray[Netarray.length - 1];
-            ordernarLista(Netarray, 0, Netarray.length - 1);
-
+            paraOWhile = Netarray[Netarray.length - 1 - (salvacao)];
+            ordernarLista(Netarray, 0, (Netarray.length - 1) - (salvacao));
+            
             // colocando todos os 4 dados
             for (int i = 0; i < Netarray.length; i++) {
                 byte[] ba2;
+                if (Netarray[i] == null) {
+                    i++;
+                }
                 ba2 = Netarray[i].toByteArray();
                 if (j % 2 == 0) {
                     arq1.writeChar(' ');
@@ -337,8 +350,169 @@ public class ordenacao {
         arq4.close();
     }
 
-    public void intercalacaoBlocosTamanhoVariavel() {
+    public void intercalacaoBlocosTamanhoVariavel(String R1, String R2, String W1, String W2) throws IOException {
+
+         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        RandomAccessFile arq1 = new RandomAccessFile(R1, "rw");
+        RandomAccessFile arq2 = new RandomAccessFile(R2, "rw");
+        RandomAccessFile arq5 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq6 = new RandomAccessFile(W2, "rw");
+        arq5.setLength(0);
+        arq6.setLength(0);
+        arq5.close();
+        arq6.close();
+        RandomAccessFile arq3 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq4 = new RandomAccessFile(W2, "rw");
+        arq3.writeInt(-1);
+        arq4.writeInt(-1);
+        arq1.skipBytes(4);
+        arq2.skipBytes(4);
+
+        int len = 0;
+        len = arq.readInt();
+
+        int bloco = 0;
+   
+        int j = 0;
+        int p = 0;
+        long pos1 = 0;
+        long pos2 = 0;
+        
+      
+        int numeroLoco = 0;
+        numeroLoco = len / y;
+        if (len % y > 0) {
+            numeroLoco++;
+        }
+        
+        System.out.println(y);
+        
+         while (numeroLoco > bloco) {
+
+            j = 0;
+            p = 0;
+            
+            if (bloco % 2 == 0) {
+                Netflix net_temp1 = new Netflix();
+                Netflix net_temp2 = new Netflix();
+                boolean x1 = false;
+                boolean x2 = false;
+                while (j != y && p != y &&  arq2.getFilePointer() != arq2.length() && arq1.getFilePointer() != arq1.length()) {
+
+                    pos1 = arq1.getFilePointer();
+                    Netflix net_temp3 = readOrd(arq1);
+                    pos2 = arq2.getFilePointer();
+                    Netflix net_temp4 = readOrd(arq2);
+
+
+                    if (net_temp1.getName().compareTo(net_temp3.getName()) > 0) {
+                        x1 = false;
+                    }
+                    else{
+                        x1 = true;
+                    }
+
+
+
+                    if (net_temp1.getName().compareTo(net_temp2.getName()) < 0 && x1 == true) {
+                  
+                        creatOrd(arq3, net_temp3);
+                        net_temp1 = net_temp3;
+                        arq2.seek(pos2);
+                        j++;
+                        
+                    } else if (net_temp1.getName().compareTo(net_temp2.getName()) > 0  && x2 == true) {
+                        creatOrd(arq3, net_temp4);
+                        net_temp2 = net_temp4;
+                        arq1.seek(pos1);
+                        p++;
+                       
+                    }
+
+
+
+                }
+
+            } else {
+                Netflix net_temp1 = new Netflix();
+                Netflix net_temp2 = new Netflix();
+                while (j != y && p != y && arq2.getFilePointer() != arq2.length() && arq1.getFilePointer() != arq1.length()) {
+                   
+                    pos1 = arq1.getFilePointer();
+                     net_temp1 = readOrd(arq1);
+                    pos2 = arq2.getFilePointer();
+                     net_temp2 = readOrd(arq2);
+
+                    if (net_temp1.getName().compareTo(net_temp2.getName()) < 0) {
+                        
+                        
+                        creatOrd(arq4, net_temp1);
+                        
+                        arq2.seek(pos2);
+                       
+                        j++;
+                    } else {
+                       
+                        creatOrd(arq4, net_temp2);
+                        arq1.seek(pos1);
+                        
+                       
+                        p++;
+                    }
+
+                }
+
+            }
+            // caso algum arquivo for maior que o outro irá terminar de escrever
+            if (bloco % 2 == 0) {
+                while (j != y  && arq1.getFilePointer() != arq1.length()) {
+                
+                    Netflix net_temp1 = readOrd(arq1);
+                    creatOrd(arq3, net_temp1);
+                    j++;
+                  
+
+                }
+                
+                while (p != y &&  arq2.getFilePointer() != arq2.length()) {
+                  
+                    Netflix net_temp1 = readOrd(arq2);
+        
+                    creatOrd(arq3, net_temp1);
+                    p++;
+                   
+                }
+            } else {
+                while (j != y && arq1.getFilePointer() != arq1.length()) {
+                   
+                    Netflix net_temp1 = readOrd(arq1);
+                    creatOrd(arq4, net_temp1);
+                    j++;
+                   
+
+                }
+
+                while (p != y  && arq2.getFilePointer() != arq2.length()) {
+                   
+                    Netflix net_temp1 = readOrd(arq2);
+                    creatOrd(arq4, net_temp1);
+                    p++;
+                    
+                }
+            }
+
+            bloco++;
+
+            System.out.println(bloco);
+        }
+
         y = y + y;
+       
+        arq.close();
+        arq1.close();
+        arq2.close();
+        arq3.close();
+        arq4.close();
     }
 
     public void intercalacaoSelecaoPorSubstituicao() {
@@ -363,9 +537,18 @@ public class ordenacao {
 
     int particao(Netflix netArr[], int esq, int dir) {
         Netflix pivo = netArr[dir];
+        if (pivo == null) {
+            pivo = netArr[dir + 1];
+        }
+
         int i = (esq - 1);
 
         for (int j = esq; j < dir; j++) {
+
+            if (netArr[j] == null) {
+                j++;
+            }
+
             if (pivo.getName().compareTo(netArr[j].getName()) > 0) {
 
                 i++;
