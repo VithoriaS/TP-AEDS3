@@ -544,7 +544,7 @@ public class Netflix {
     static public void TelaArvore() throws IOException {
 
         int x = 0;
-        arvore ARV = new arvore();
+        arvore ARV = new arvore(8, "indexArv.db");
         long pos;
         Scanner sc = new Scanner(System.in);
         do {
