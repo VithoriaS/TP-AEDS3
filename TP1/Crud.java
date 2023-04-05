@@ -91,7 +91,7 @@ public class Crud {
         
         net.Id = len;
 
-        net.printar();
+        
 
         arq.seek(0);
         arq.writeInt(len);
@@ -102,6 +102,33 @@ public class Crud {
         arq.write(ba);
 
         arq.close();
+    }
+
+    
+    public long createPos(Netflix net) throws IOException {
+        int len = 0;
+        byte[] ba;
+
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        len = arq.readInt();
+       
+        len = len + 1;
+        
+        net.Id = len;
+
+        
+
+        arq.seek(0);
+        arq.writeInt(len);
+        arq.seek(arq.length());
+        long pos = arq.length();
+        ba = net.toByteArray();
+        arq.writeChar(' ');
+        arq.writeInt(ba.length);
+        arq.write(ba);
+
+        arq.close();
+      return pos;
     }
 
     public void create(Netflix net) throws IOException {
