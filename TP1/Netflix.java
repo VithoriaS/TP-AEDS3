@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.util.Date;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.jar.Attributes.Name;
 
 import javax.lang.model.util.ElementScanner14;
 
@@ -52,8 +53,11 @@ public class Netflix {
     }
 
     public void printar() {
-  
-                
+        System.out.println("ID:" + Id);  
+        System.out.println("Type:" + Type);     
+        System.out.println("NOME:" + Name);     
+        
+        
         if (Cast == null) {
 
         } else {
@@ -599,7 +603,7 @@ public class Netflix {
                     
                     break;
                 case 5:
-               ARV.LerRegistroEfazerArvore();
+               ARV.LerRegistroEfazerArvore("teste2.csv", "teste.db", 8807);
                     break;
                 case 6:
              
@@ -743,7 +747,7 @@ public class Netflix {
                 TelaArquiSeq();
                     break;
                 case 2:
-                 
+                 TelaArvore();
                     break;
                 case 3:
              

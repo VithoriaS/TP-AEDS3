@@ -117,7 +117,7 @@ public class Crud {
         
         net.Id = len;
 
-        net.printar();
+        
 
         arq.seek(0);
         arq.writeInt(len);
