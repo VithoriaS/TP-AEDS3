@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.util.Date;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.jar.Attributes.Name;
 
 import javax.lang.model.util.ElementScanner14;
 
@@ -52,10 +53,11 @@ public class Netflix {
     }
 
     public void printar() {
-        System.out.println("\nID: " + Id +
-                "\nType: " + Type +
-                "\nNome: " + Name);
-                /*
+        System.out.println("ID:" + Id);  
+        System.out.println("Type:" + Type);     
+        System.out.println("NOME:" + Name);     
+        
+        
         if (Cast == null) {
 
         } else {
@@ -80,7 +82,7 @@ public class Netflix {
         }
 
         System.out.println("\nDescription: " + Description);
-        */
+        
 
     }
 
@@ -512,22 +514,22 @@ public class Netflix {
         // System.out.println("\nTESTE8: " + Description);
     }
 
-    static public void LerBaseDeDadosInicial(String s1, String s2) throws IOException
+    static public void LerBaseDeDadosInicial(String s1, String s2, int NumRegistros) throws IOException
     {
-        Netflix[] net = new Netflix[8807];
+        Netflix[] net = new Netflix[NumRegistros];
         byte[] ba;
 
-        BufferedReader bf = new BufferedReader(new FileReader("teste2.csv"));
+        BufferedReader bf = new BufferedReader(new FileReader(s1));
 
-        for (int j = 0; j < 8807; j++) {
+        for (int j = 0; j < NumRegistros; j++) {
             net[j] = new Netflix(bf.readLine());
         }
         bf.close();
 
-        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        RandomAccessFile arq = new RandomAccessFile(s2, "rw");
         
-          arq.writeInt(8807);
-          for (int i = 0; i < 8807; i++) {
+          arq.writeInt(NumRegistros);
+          for (int i = 0; i < NumRegistros; i++) {
           ba = net[i].toByteArray();
           arq.writeChar(' ');
           arq.writeInt(ba.length);
@@ -538,7 +540,83 @@ public class Netflix {
          
     }
 
-    static public void TelaIncial() throws IOException {
+
+    static public void TelaArvore() throws IOException {
+
+        int x = 0;
+        CrudArvore crudA = new CrudArvore();
+        long pos;
+        Scanner sc = new Scanner(System.in);
+        do {
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - parar");
+            System.out.println(" 1 - Create");
+            System.out.println(" 2 - Read");
+            System.out.println(" 3 - Update");
+            System.out.println(" 4 - Delete");
+            System.out.println(" 5 - Ler base de dados incial !CUIDADO! (So use se nao tiver arquivo)");
+          
+            
+
+
+            System.out.println("Entrar com uma opcao:");
+            
+            x= sc.nextInt();
+            System.out.println(x);
+
+            switch (x) {
+                case 0:
+                    
+                    break;
+                case 1:
+                    crudA.createArv();
+                    break;
+                case 2:
+                crudA.readArv();
+                    break;
+                case 3:
+                /* 
+                System.out.println("Qual Id deseja Update:");
+                int Num = sc.nextInt();
+                ARV.uptate(Num);
+                */
+                    break;
+                case 4:
+                /* 
+
+                System.out.println("Qual Id deseja Deletar:");
+                    int Num2 = sc.nextInt();
+   
+                    Boolean b1 = ARV.delete(Num2);
+
+                    if (b1) {
+                        System.out.println("Deletado");
+                    } else {
+                        System.out.println("n tem esse registro ou ele ja esta deletado");
+                    }
+                    */
+                    break;
+                case 5:
+                
+               crudA.LerRegistroEfazerArvore("teste2.csv", "teste.db", 8807);
+                    
+                    break;
+                case 6:
+             
+                    break;
+
+
+
+                default:
+                    System.out.println("ERRO: Valor invalido:" + x);
+            }
+
+        } while (x != 0);
+        sc.close();
+    }
+
+
+    static public void TelaArquiSeq() throws IOException {
 
         int x = 0;
         Crud c = new Crud();
@@ -555,6 +633,7 @@ public class Netflix {
             System.out.println(" 5 - Ordernar");
             System.out.println(" 6 - Ler base de dados incial !CUIDADO! (So use se nao tiver arquivo)");
             System.out.println(" 7 - Deletar Registro");
+            System.out.println(" 8 - Ler tudo ");
 
 
             System.out.println("Entrar com uma opcao:");
@@ -605,15 +684,75 @@ public class Netflix {
                     ord.LoopOrdenacao();
                     break;
                 case 6:
-                LerBaseDeDadosInicial("teste2.csv", "teste.db");
+                LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
                     break;
 
                 case 7:
                 System.out.println("Qual Arquivo deseja Deletar:");
                 String s1 = sc.next();
                 apagarRegistro(s1);
+
+
                 
-                    break;    
+                    break;   
+                    
+                    case 8:
+                
+               
+                c.readAll();
+
+                
+    
+                    break;  
+
+                default:
+                    System.out.println("ERRO: Valor invalido:" + x);
+            }
+
+        } while (x != 0);
+        sc.close();
+    }
+
+    static public void TelaInicial() throws IOException {
+
+        int x = 0;
+        Crud c = new Crud();
+        ordenacao ord = new ordenacao();
+        long pos;
+        Scanner sc = new Scanner(System.in);
+        do {
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - parar");
+            System.out.println(" 1 - ArqSequencial");
+            System.out.println(" 2 - Arvore");
+            System.out.println(" 3 - Hash");
+            System.out.println(" 4 - ListaFlexivel");
+
+
+
+            System.out.println("Entrar com uma opcao:");
+            
+            x= sc.nextInt();
+            System.out.println(x);
+
+            switch (x) {
+                case 0:
+                    
+                    break;
+                case 1:
+                TelaArquiSeq();
+                    break;
+                case 2:
+                 TelaArvore();
+                    break;
+                case 3:
+             
+                    break;
+                case 4:
+
+                    
+                    break;
+             
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
@@ -625,7 +764,7 @@ public class Netflix {
 
     public static void main(String[] args) throws IOException {
       
-        TelaIncial();
+        TelaInicial();
 
     }
 }

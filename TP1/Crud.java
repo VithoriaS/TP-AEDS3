@@ -91,7 +91,7 @@ public class Crud {
         
         net.Id = len;
 
-        net.printar();
+        
 
         arq.seek(0);
         arq.writeInt(len);
@@ -102,6 +102,33 @@ public class Crud {
         arq.write(ba);
 
         arq.close();
+    }
+
+    
+    public long createPos(Netflix net) throws IOException {
+        int len = 0;
+        byte[] ba;
+
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        len = arq.readInt();
+       
+        len = len + 1;
+        
+        net.Id = len;
+
+        
+
+        arq.seek(0);
+        arq.writeInt(len);
+        arq.seek(arq.length());
+        long pos = arq.length();
+        ba = net.toByteArray();
+        arq.writeChar(' ');
+        arq.writeInt(ba.length);
+        arq.write(ba);
+
+        arq.close();
+      return pos;
     }
 
     public void create(Netflix net) throws IOException {
@@ -117,7 +144,7 @@ public class Crud {
         
         net.Id = len;
 
-        net.printar();
+        
 
         arq.seek(0);
         arq.writeInt(len);
@@ -135,19 +162,11 @@ public class Crud {
     public Netflix  read(int IdLegal) throws IOException {
         int len = 0;
         char c = 'a';
-        RandomAccessFile arq = new RandomAccessFile("temp3.db", "rw");
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
         len = arq.readInt();
         int x = 0;
         byte[] ba;
-        
-        // len = total de ID's
-        // while ( id != len) {
-        // if ( lapide != '*') {
-        // pega obj ????
-        // se obj.id = IdLegal
-        // return obj e termina
-        // }
-        // } return null
+    
 
         Netflix net_temp = new Netflix();
         while (net_temp.Id != len) { 
@@ -186,6 +205,60 @@ public class Crud {
 
     
     }
+
+    public Netflix  readAll() throws IOException {
+        int len = 0;
+        char c = 'a';
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        len = arq.readInt();
+        int x = 0;
+        byte[] ba;
+        
+        // len = total de ID's
+        // while ( id != len) {
+        // if ( lapide != '*') {
+        // pega obj ????
+        // se obj.id = IdLegal
+        // return obj e termina
+        // }
+        // } return null
+
+        Netflix net_temp = new Netflix();
+        while (net_temp.Id != len) { 
+            
+            try {
+                c = arq.readChar();
+            } catch (Exception e) {
+                System.out.println("TryCathc" + x + "TESTE"+  c + "TESTE");
+            }
+
+  
+            
+            int length = arq.readInt();
+            
+            if (c != '*') {
+                
+                ba = new byte[length];
+                arq.read(ba);
+                net_temp.fromByteArray(ba);
+             
+                System.out.println(net_temp.getName());
+                
+            }
+            else
+            {
+                arq.skipBytes(length);
+            }
+           
+            
+        }
+        arq.close();
+        return null;
+
+    
+    }
+
+
 
 
     public boolean uptate (int Id) throws IOException{
