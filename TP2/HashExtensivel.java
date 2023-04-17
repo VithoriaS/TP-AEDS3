@@ -102,7 +102,7 @@ public class HashExtensivel {
             else
                 return -1;        
         }
-
+//teste
         public boolean update(int c, long d) {
             if(empty())
                 return false;
