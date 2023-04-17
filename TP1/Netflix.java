@@ -572,17 +572,7 @@ public class Netflix {
                     crudA.createArv();
                     break;
                 case 2:
-                /* 
-                    System.out.println("Qual Id deseja procurar:");
-
-                    Netflix temp = ARV.read(sc.nextInt());
-
-                    if (temp == null) {
-                        System.out.println("Nao Tem");
-                    } else {
-                        temp.printar();
-                    }
-*/
+                crudA.readArv();
                     break;
                 case 3:
                 /* 

@@ -117,13 +117,13 @@ public class arvore {
         // da primeira chave, a segunda também é usada como referência.
         // Nesse primeiro passo, todos os pares menores são ultrapassados.
         int i=0;
-        while(i<pa.n && chaveAux > pa.chaves[i]) {
+        while(i<pa.n && chaveAux > pa.chaves[i]) { // abacate
             i++;
         } 
         
         // Testa se a chave já existe em uma folha. Se isso acontecer, então 
         // a inclusão é cancelada.
-        if(i<pa.n && pa.filhos[0]==-1 && chaveAux == (pa.chaves[i])) {
+        if(i<pa.n && pa.filhos[0]== -1 && chaveAux == (pa.chaves[i])) {
             cresceu = false;
             return false;
         }
@@ -131,7 +131,7 @@ public class arvore {
         // Continua a busca recursiva por uma nova página. A busca continuará até o
         // filho inexistente de uma página folha ser alcançado.
         boolean inserido;
-        if(i==pa.n ||   chaveAux < pa.chaves[i] )
+        if(i==pa.n ||   chaveAux < pa.chaves[i] ) // abacate
             inserido = create1(pa.filhos[i]);
         else
             inserido = create1(pa.filhos[i+1]);
@@ -236,7 +236,7 @@ public class arvore {
         // Caso 2 - Novo registro deve ficar na página da direita
         else {
             int j;
-            for(j=maxElementos-meio; j>0 && chaveAux < np.chaves[j-1]; j--) {
+            for(j=maxElementos-meio; j>0 && chaveAux < np.chaves[j-1]; j--) { // abacate
                 np.chaves[j] = np.chaves[j-1];
                 np.dados[j] = np.dados[j-1];
                 np.filhos[j+1] = np.filhos[j];
@@ -282,6 +282,69 @@ public class arvore {
     }
 
 
+    public long read(int d) throws IOException {
+        
+        // Recupera a raiz da árvore
+        long raiz;
+        arquivo.seek(0);
+        raiz = arquivo.readLong();
+        
+        // Executa a busca recursiva
+        if(raiz!=-1)
+        {
+            System.out.println("ENTROU AQUI 3 ");
+            return read1(d,raiz);
+        }
+        else
+        {
+            System.out.println("ENTROU AQUI 1 ");
+            return -1;
+        }
+          
+    }
+
+    private long read1(int chave, long pagina) throws IOException {
+        
+        // Como a busca é recursiva, a descida para um filho inexistente
+        // (filho de uma página folha) retorna um valor negativo.
+        if(pagina==-1)
+            return -1;
+        
+        // Reconstrói a página passada como referência a partir 
+        // do registro lido no arquivo
+        arquivo.seek(pagina);
+        Node pa = new Node(Ordem);
+        byte[] buffer = new byte[pa.TAMANHO_PAGINA];
+        arquivo.read(buffer);
+        pa.fromByteArrayArv(buffer);
+ 
+        // Encontra o ponto em que a chave deve estar na página
+        // Primeiro passo - todas as chaves menores que a chave buscada são ignoradas
+        int i=0;
+        while(i<pa.n && chave > pa.chaves[i] ) { // abacate
+            i++;
+        }
+        
+        // Chave encontrada (ou pelo menos o ponto onde ela deveria estar).
+        // Segundo passo - testa se a chave é a chave buscada e se está em uma folha
+        // Obs.: em uma árvore B+, todas as chaves válidas estão nas folhas
+        // Obs.: a comparação exata só será possível se considerarmos a menor string
+        //       entre a chave e a string na página
+        if(i<pa.n  
+                  && chave == (pa.chaves[i])) {
+                    System.out.println("ENTROU AQUI 2 ");
+            return pa.dados[i];
+        }
+        
+        // Terceiro passo - ainda não é uma folha, continua a busca recursiva pela árvore
+        if(i==pa.n || chave < pa.chaves[i]) // abacate
+            return read1(chave, pa.filhos[i]);
+        else
+            return read1(chave, pa.filhos[i+1]);
+
+    }
+
+
     public void uptate(int IdUpdate)
     {
 
@@ -294,11 +357,7 @@ public class arvore {
     return false;
     }
 
-    public Netflix read(int IdRead)
-    {
-        return null;
-
-    }
+   
 
 
 

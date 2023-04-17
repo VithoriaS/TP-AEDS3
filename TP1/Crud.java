@@ -166,15 +166,7 @@ public class Crud {
         len = arq.readInt();
         int x = 0;
         byte[] ba;
-        
-        // len = total de ID's
-        // while ( id != len) {
-        // if ( lapide != '*') {
-        // pega obj ????
-        // se obj.id = IdLegal
-        // return obj e termina
-        // }
-        // } return null
+    
 
         Netflix net_temp = new Netflix();
         while (net_temp.Id != len) { 
