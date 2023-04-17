@@ -74,24 +74,7 @@ public class ordenacao {
         int x = 0;
         int tamanho, tamanho1 = 0;
         boolean par = len % 2 == 0;
-        /*
-         * if (par) {
-         * tamanho = len / 2;
-         * 
-         * for (int i = 0; i < tamanho; i++) {
-         * 
-         * }
-         * 
-         * } else {
-         * tamanho = len / 2;
-         * tamanho1 = tamanho + 1;
-         * }
-         * 
-         * String pos1, pos2, pos3, pos4;
-         */
-        // ---------------------------------------- ordenacao em memoria principal
-        // ----------------------------------------
-        // quantos arquivos por vez
+        
         int k = 0;
         int j = 0;
         Netflix paraOWhile = new Netflix();
@@ -168,8 +151,8 @@ public class ordenacao {
         RandomAccessFile arq7 = new RandomAccessFile(W1, "rw");
         RandomAccessFile arq8 = new RandomAccessFile(W2, "rw");
        
-        arq7.writeInt(1);
-        arq8.writeInt(1);
+        arq7.writeInt(-1);
+        arq8.writeInt(-1);
         arq7.close();
         arq8.close();
 
@@ -186,8 +169,8 @@ public class ordenacao {
         int bloco = 0;
         int k1 = 0;
         int k2 = 0;
-        byte ba[];
-        byte ba2[];
+        byte[] ba;
+        byte[] ba2;
         int j = 0;
         int p = 0;
         long pos1 = 0;
@@ -373,7 +356,7 @@ public class ordenacao {
 
                 while (p != y && limite2 > k2 && arq2.getFilePointer() != arq2.length()) {
                     char c = arq2.readChar();
-                    System.out.println(c);
+                    //System.out.println(c);
                     int tamanho = arq2.readInt();
                     
                     try {
@@ -416,14 +399,14 @@ public class ordenacao {
         y = y + y;
     }
 
-    public Netflix[] swap(Netflix netArr[], int x, int y) {
+    public Netflix[] swap(Netflix[] netArr, int x, int y) {
         Netflix temp = netArr[x];
         netArr[x] = netArr[y];
         netArr[y] = temp;
         return netArr;
     }
 
-    void ordernarLista(Netflix netArr[], int esq, int dir) {
+    void ordernarLista(Netflix[] netArr, int esq, int dir) {
         if (esq < dir) {
             int pi = particao(netArr, esq, dir);
 
@@ -432,7 +415,7 @@ public class ordenacao {
         }
     }
 
-    int particao(Netflix netArr[], int esq, int dir) {
+    int particao(Netflix[] netArr, int esq, int dir) {
         Netflix pivo = netArr[dir];
         int i = (esq - 1);
 
