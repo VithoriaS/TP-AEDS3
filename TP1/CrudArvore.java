@@ -67,24 +67,20 @@ public class CrudArvore {
 
         BufferedReader bf = new BufferedReader(new FileReader(s1));
         RandomAccessFile arq = new RandomAccessFile(s2, "rw");
-      //  arq.writeInt(0);
-       // arq.close();
+        arq.writeInt(0);
+        arq.close();
         Crud CRU = new Crud();
-        arq.writeInt(NumRegistros);
+      //  arq.writeInt(NumRegistros);
         for (int j = 0; j < NumRegistros; j++) {
             Netflix net =  new Netflix(bf.readLine());
-            ba = net.toByteArray();
-            arq.writeChar(' ');
-            arq.writeInt(ba.length);
-            arq.write(ba);
+      //      ba = net.toByteArray();
+          //  arq.writeChar(' ');
+          //  arq.writeInt(ba.length);
+         //   arq.write(ba);
            // CRU.create(net);
             createArv2(net);
         }
         bf.close();
-
       
-    
-        
-            
     }
 }
