@@ -13,7 +13,7 @@ public class Node {
     int[] chaves;                // Chaves
     long[] dados;                        // Dados associados às chaves
     long[] filhos;                  // Vetor de ponteiros para os filhos
- 
+    protected int      TAMANHO_PAGINA;    
     public Node(int o) {
 
         // Inicialização dos atributos
@@ -34,6 +34,7 @@ public class Node {
         }
         filhos[maxFilhos-1] = -1;
 
+        TAMANHO_PAGINA = 4 + maxElementos*4 + maxElementos*8 + maxFilhos*8  ;
     }
 
     public byte[] toByteArrayArv() throws IOException

@@ -544,7 +544,7 @@ public class Netflix {
     static public void TelaArvore() throws IOException {
 
         int x = 0;
-        arvore ARV = new arvore(8, "indexArv.db");
+        CrudArvore crudA = new CrudArvore();
         long pos;
         Scanner sc = new Scanner(System.in);
         do {
@@ -569,9 +569,10 @@ public class Netflix {
                     
                     break;
                 case 1:
-                    ARV.create();
+                    crudA.createArv();
                     break;
                 case 2:
+                /* 
                     System.out.println("Qual Id deseja procurar:");
 
                     Netflix temp = ARV.read(sc.nextInt());
@@ -581,14 +582,17 @@ public class Netflix {
                     } else {
                         temp.printar();
                     }
-
+*/
                     break;
                 case 3:
+                /* 
                 System.out.println("Qual Id deseja Update:");
                 int Num = sc.nextInt();
                 ARV.uptate(Num);
+                */
                     break;
                 case 4:
+                /* 
 
                 System.out.println("Qual Id deseja Deletar:");
                     int Num2 = sc.nextInt();
@@ -600,10 +604,12 @@ public class Netflix {
                     } else {
                         System.out.println("n tem esse registro ou ele ja esta deletado");
                     }
-                    
+                    */
                     break;
                 case 5:
-               ARV.LerRegistroEfazerArvore("teste2.csv", "teste.db", 8807);
+                
+               crudA.LerRegistroEfazerArvore("teste2.csv", "teste.db", 8807);
+                    
                     break;
                 case 6:
              
