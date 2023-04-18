@@ -726,7 +726,7 @@ public class Netflix {
             System.out.println(" 1 - ArqSequencial");
             System.out.println(" 2 - Arvore");
             System.out.println(" 3 - Hash");
-            System.out.println(" 4 - ListaFlexivel");
+            System.out.println(" 4 - Lista Invertida");
 
 
 
