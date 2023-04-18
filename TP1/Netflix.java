@@ -575,11 +575,7 @@ public class Netflix {
                 crudA.readArv();
                     break;
                 case 3:
-                /* 
-                System.out.println("Qual Id deseja Update:");
-                int Num = sc.nextInt();
-                ARV.uptate(Num);
-                */
+                crudA.updateArv();
                     break;
                 case 4:
                 /* 

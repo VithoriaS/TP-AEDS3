@@ -106,6 +106,9 @@ public class ordenacao {
         
     }
 
+    /*
+     * Pré intercalacao, fazendo a intercalacao apenas de um arquivo.
+     */
     public void ordencaoMemoriaPrimaria() throws IOException {
 
         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
@@ -118,9 +121,7 @@ public class ordenacao {
         len = arq.readInt();
         arq1.writeInt(-1);
         arq2.writeInt(-1);
-        int x = 0;
-        int tamanho, tamanho1 = 0;
-        boolean par = len % 2 == 0;
+      
         /*
          * if (par) {
          * tamanho = len / 2;
@@ -216,14 +217,6 @@ public class ordenacao {
         arq6.setLength(0);
         arq5.close();
         arq6.close();
-        RandomAccessFile arq7 = new RandomAccessFile(W1, "rw");
-        RandomAccessFile arq8 = new RandomAccessFile(W2, "rw");
-       
-        arq7.writeInt(1);
-        arq8.writeInt(1);
-        arq7.close();
-        arq8.close();
-
         RandomAccessFile arq3 = new RandomAccessFile(W1, "rw");
         RandomAccessFile arq4 = new RandomAccessFile(W2, "rw");
         arq3.writeInt(-1);
@@ -235,10 +228,7 @@ public class ordenacao {
         len = arq.readInt();
 
         int bloco = 0;
-        int k1 = 0;
-        int k2 = 0;
-        byte ba[];
-        byte ba2[];
+   
         int j = 0;
         int p = 0;
         long pos1 = 0;
@@ -251,7 +241,7 @@ public class ordenacao {
             numeroLoco++;
         }
         
-        System.out.println(y);
+        //System.out.println(y);
         
          while (numeroLoco > bloco) {
 
@@ -336,16 +326,95 @@ public class ordenacao {
                     Netflix net_temp1 = readOrd(arq1);
                     creatOrd(arq4, net_temp1);
                     j++;
-                    k1++;
+                   
 
                 }
 
-                while (p != y && limite2 > k2 && arq2.getFilePointer() != arq2.length()) {
-                    char c = arq2.readChar();
-                    int tamanho = arq2.readInt();
-                    ba = new byte[tamanho];
-                    arq2.read(ba);
-                    Netflix net_temp1 = new Netflix();
+                while (p != y  && arq2.getFilePointer() != arq2.length()) {
+                   
+                    Netflix net_temp1 = readOrd(arq2);
+                    creatOrd(arq4, net_temp1);
+                    p++;
+                    
+                }
+            }
+
+            bloco++;
+
+            //System.out.println(bloco);
+        }
+
+        y = y + y;
+       
+        arq.close();
+        arq1.close();
+        arq2.close();
+        arq3.close();
+        arq4.close();
+    }
+
+    public void intercalacaoBlocosTamanhoVariavel(String R1, String R2, String W1, String W2) throws IOException {
+
+         RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        RandomAccessFile arq1 = new RandomAccessFile(R1, "rw");
+        RandomAccessFile arq2 = new RandomAccessFile(R2, "rw");
+        RandomAccessFile arq5 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq6 = new RandomAccessFile(W2, "rw");
+        arq5.setLength(0);
+        arq6.setLength(0);
+        arq5.close();
+        arq6.close();
+        RandomAccessFile arq3 = new RandomAccessFile(W1, "rw");
+        RandomAccessFile arq4 = new RandomAccessFile(W2, "rw");
+        arq3.writeInt(-1);
+        arq4.writeInt(-1);
+        arq1.skipBytes(4);
+        arq2.skipBytes(4);
+
+        int len = 0;
+        len = arq.readInt();
+
+        int bloco = 0;
+   
+        int j = 0;
+        int p = 0;
+        long pos1 = 0;
+        long pos2 = 0;
+        
+      
+        int numeroLoco = 0;
+        numeroLoco = len / y;
+        if (len % y > 0) {
+            numeroLoco++;
+        }
+        
+        System.out.println(y);
+        
+         while (numeroLoco > bloco) {
+
+            j = 0;
+            p = 0;
+            
+            if (bloco % 2 == 0) {
+                Netflix net_temp1 = new Netflix();
+                Netflix net_temp2 = new Netflix();
+                boolean x1 = false;
+                boolean x2 = false;
+                while (j != y && p != y &&  arq2.getFilePointer() != arq2.length() && arq1.getFilePointer() != arq1.length()) {
+
+                    pos1 = arq1.getFilePointer();
+                    Netflix net_temp3 = readOrd(arq1);
+                    pos2 = arq2.getFilePointer();
+                    Netflix net_temp4 = readOrd(arq2);
+
+
+                    if (net_temp1.getName().compareTo(net_temp3.getName()) > 0) {
+                        x1 = false;
+                    }
+                    else{
+                        x1 = true;
+                    }
+
 
 
                     if (net_temp1.getName().compareTo(net_temp2.getName()) < 0 && x1 == true) {
@@ -453,14 +522,21 @@ public class ordenacao {
         y = y + y;
     }
 
-    public Netflix[] swap(Netflix[] netArr, int x, int y) {
+    /**
+     * Recebe um array de objetos Netflix e dois índices "x" e "y" para serem trocados.
+       @return Retorna o array com os objetos trocados.
+     */
+    public Netflix[] swap(Netflix netArr[], int x, int y) {
         Netflix temp = netArr[x];
         netArr[x] = netArr[y];
         netArr[y] = temp;
         return netArr;
     }
 
-    void ordernarLista(Netflix[] netArr, int esq, int dir) {
+    /*
+     * Ordenacao Quick Sort
+     */
+    void ordernarLista(Netflix netArr[], int esq, int dir) {
         if (esq < dir) {
             int pi = particao(netArr, esq, dir);
 
@@ -468,8 +544,10 @@ public class ordenacao {
             ordernarLista(netArr, pi + 1, dir);
         }
     }
-
-    int particao(Netflix[] netArr, int esq, int dir) {
+    /*
+        * Faz a reparticao do Quick Sort
+        */
+    int particao(Netflix netArr[], int esq, int dir) {
         Netflix pivo = netArr[dir];
         if (pivo == null) {
             pivo = netArr[dir + 1];
@@ -496,6 +574,11 @@ public class ordenacao {
         return (i + 1);
     }
 
+    /**
+     * Função que cria um novo registro no arquivo "teste.db" com os dados do objeto Netflix fornecido,
+     * @param arq o arquivo "teste.db" aberto para escrita
+     * @param net_temp1 o objeto Netflix contendo os dados a serem inseridos no arquivo
+    */
     public static void creatOrd(RandomAccessFile arq, Netflix net_temp1) throws IOException {
         byte[] ba3;
         ba3 = net_temp1.toByteArray();
@@ -509,6 +592,10 @@ public class ordenacao {
 
     }
 
+    /*
+     * A função "readOrd" lê um registro do arquivo "teste.db" na 
+     * ordem em que foi inserido e o retorna como um objeto da classe "Netflix".
+     */
     public static Netflix readOrd(RandomAccessFile arq1 ) throws IOException {
 
         byte[] ba;

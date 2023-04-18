@@ -292,12 +292,12 @@ public class arvore {
         // Executa a busca recursiva
         if(raiz!=-1)
         {
-            System.out.println("ENTROU AQUI 3 ");
+           
             return read1(d,raiz);
         }
         else
         {
-            System.out.println("ENTROU AQUI 1 ");
+            
             return -1;
         }
           
@@ -332,7 +332,7 @@ public class arvore {
         //       entre a chave e a string na página
         if(i<pa.n  
                   && chave == (pa.chaves[i])) {
-                    System.out.println("ENTROU AQUI 2 ");
+                    
             return pa.dados[i];
         }
         
