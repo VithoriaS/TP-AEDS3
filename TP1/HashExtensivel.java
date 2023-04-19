@@ -548,46 +548,18 @@ public class HashExtensivel {
 
     }
 
+    
     /**
-    *Atualiza o valor armazenado na tabela hash para a chave especificada com o novo dado fornecido.
-    *@param chave a chave para a qual o valor será atualizado
-    *@param novoDado o novo valor a ser armazenado na tabela hash para a chave especificada
-    *@return true se a atualização foi bem-sucedida, false caso contrário
-    *@throws Exception se ocorrer um erro durante o processo de atualização
-    */
-    public boolean update(int chave, long novoDado) throws Exception {
-        
-        //Carrega o diretório
-        byte[] bd = new byte[(int)arqDiretório.length()];
-        arqDiretório.seek(0);
-        arqDiretório.read(bd);
-        diretório = new Diretório();
-        diretório.fromByteArray(bd);        
-        
-        // Identifica a hash do diretório,
-        int i = diretório.hash(chave);
-        
-        // Recupera o cesto
-        long endereçoCesto = diretório.endereço(i);
-        Cesto c = new Cesto(qtdCesto);
-        byte[] ba = new byte[c.size()];
-        arqCestos.seek(endereçoCesto);
-        arqCestos.read(ba);
-        c.fromByteArray(ba);
-        
-        // atualiza o dado
-        if(!c.update(chave, novoDado))
-            return false;
-        
-        // Atualiza o cesto
-        arqCestos.seek(endereçoCesto);
-        arqCestos.write(c.toByteArray());
-        return true;
-        
-    }
-
-        public void updateHash(int chave, long pos) throws Exception
-        {
+     * Atualiza o registro com a chave especificada na tabela hash,
+     * atualizando o registro no cesto correspondente.
+     * Se o registro já existir no cesto, atualiza diretamente nele.
+     * Se o registro não existir no cesto, apaga o registro antigo e insere um novo.
+     *
+     * @param chave a chave do registro a ser atualizado
+     * @param pos a posição do registro a ser atualizado no arquivo
+     * @throws Exception se ocorrer algum erro durante a atualização
+     */
+    public void updateHash(int chave, long pos) throws Exception{
         
             RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
             arq.seek(pos);
@@ -642,7 +614,7 @@ public class HashExtensivel {
             arq.close();
             
 
-        }
+    }
     
     /**
      * Esta função recebe uma chave como parâmetro e busca essa 
