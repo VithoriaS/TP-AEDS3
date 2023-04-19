@@ -616,6 +616,49 @@ public class Netflix {
         sc.close();
     }
 
+    static public void TelaArquiHash() throws Exception {
+        int y =0;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Quantidade de elementos por cesto:");
+        int numCesto = sc.nextInt();
+        do{
+            
+            HashExtensivel h = new HashExtensivel(numCesto,"Index.db","Cesto.db");
+
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - parar");
+            System.out.println(" 1 - Criar a Hash");
+            System.out.println(" 2 - Creat");
+            System.out.println(" 3 - Uptade");
+            System.out.println(" 4 - Read");
+            System.out.println(" 5 - Delete");
+            y = sc.nextInt();
+
+            switch(y){
+                case 1:
+                    h.LerRegistroHash("teste2.csv", "teste.db");
+                    break;
+                case 2:
+                    h.createHash();
+                    break;
+                case 3:
+                System.out.println("Digite a chave (ID) que voce quer mudar: ");
+                int chave1 = sc.nextInt();
+                h.updateHash(chave1);
+                    break;  
+                case 4:
+                System.out.println("Digite a chave (ID) que voce quer Ler: ");
+                int chave = sc.nextInt();
+                h.readHash(chave);
+                    break;   
+                case 5:
+                    break;       
+            }
+        }while(y!=0);
+    
+
+
+    }
 
     static public void TelaArquiSeq() throws IOException {
 
@@ -742,53 +785,16 @@ public class Netflix {
 
             switch (x) {
                 case 1:
-                TelaArquiSeq();
+                    TelaArquiSeq();
                     break;
                 case 2:
-                 TelaArvore();
+                    TelaArvore();
                     break;
                 case 3:
-                    System.out.println("Quantidade de elementos por cesto:");
-                    numCesto = sc.nextInt();
-                    do{
-                        
-                        HashExtensivel h = new HashExtensivel(numCesto,"Index.db","Cesto.db");
-
-                        System.out.println("\nOpcoes ");
-                        System.out.println(" 0 - parar");
-                        System.out.println(" 1 - Criar a Hash");
-                        System.out.println(" 2 - Creat");
-                        System.out.println(" 3 - Uptade");
-                        System.out.println(" 4 - Read");
-                        System.out.println(" 5 - Delete");
-                        y = sc.nextInt();
-
-                        switch(y){
-                            case 1:
-                                h.LerRegistroHash("teste2.csv", "teste.db");
-                                break;
-                            case 2:
-                                h.createHash();
-                                break;
-                            case 3:
-                                break;  
-                            case 4:
-                            System.out.println("Digite a chave (ID) que voce quer Ler: ");
-                            int chave = sc.nextInt();
-                            h.readHash(chave);
-                                break;   
-                            case 5:
-                                break;       
-                        }
-                    }while(y!=0);
-                   
-                    
-                    break;
+                     TelaArquiHash();
                 case 4:
-
-                LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
+                    LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
                     break;
-             
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
