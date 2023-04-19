@@ -534,7 +534,6 @@ public class HashExtensivel {
         } else {
             RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
             arq.seek(pos);
-            char c = arq.readChar();
     
             int length = arq.readInt();
             byte[] ba = new byte[length];
@@ -646,7 +645,7 @@ public class HashExtensivel {
      * Esta função recebe uma chave como parâmetro e busca essa 
      * chave em uma tabela hash para removê-la, caso ela exista.
      * @param chave inteiro que representa a chave a ser buscada e removida na tabela hash
-     * @return true se a chave foi removida com sucesso, false caso contrário.
+      * @return true se a chave foi removida com sucesso, false caso contrário.
      * @throws Exception lançada caso ocorra algum erro na leitura ou escrita do arquivo de diretório ou cestos.
      */
     public boolean delete(int chave) throws Exception {

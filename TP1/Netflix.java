@@ -642,22 +642,28 @@ public class Netflix {
                     h.createHash();
                     break;
                 case 3:
-                System.out.println("Digite a chave (ID) que voce quer mudar: ");
-                int chave1 = sc.nextInt();
-                h.updateHash(chave1);
-                    break;  
+                    System.out.println("Digite a chave (ID) que voce quer mudar: ");
+                    int chave1 = sc.nextInt();
+                    h.updateHash(chave1);
+                break;  
+
                 case 4:
-                System.out.println("Digite a chave (ID) que voce quer Ler: ");
-                int chave = sc.nextInt();
-                h.readHash(chave);
-                    break;   
+                    System.out.println("Digite a chave (ID) que voce quer Ler: ");
+                    int chave = sc.nextInt();
+                    h.readHash(chave);
+                break;   
+
                 case 5:
-                    break;       
+                    System.out.println("Digite a chave (ID) que voce quer deletar: ");
+                    int chave2 = sc.nextInt();
+                    if(h.delete(chave2)){
+                        System.out.println("Elemente deletado com Sucesso!");
+                    }else{
+                        System.out.println("Elemento não deletado");
+                    }
+                break;       
             }
         }while(y!=0);
-    
-
-
     }
 
     static public void TelaArquiSeq() throws IOException {
