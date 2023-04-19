@@ -182,6 +182,11 @@ public class Netflix {
         Listed_in = listed_in;
     }
 
+    public void tamanhoListed_in(int length ) {
+        Listed_in = new String[length];
+    }
+
+
     public String getDescription() {
         return Description;
     }
@@ -763,4 +768,7 @@ public class Netflix {
         TelaInicial();
 
     }
+
+	public void setCast(String readUTF) {
+	}
 }
