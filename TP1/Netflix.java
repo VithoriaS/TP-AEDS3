@@ -7,12 +7,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Date;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.jar.Attributes.Name;
-
-import javax.lang.model.util.ElementScanner14;
 
 public class Netflix {
     char lapide;
@@ -799,7 +795,7 @@ public class Netflix {
                 case 3:
                      TelaArquiHash();
                 case 4:
-                    LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
+                    
                     break;
 
                 default:

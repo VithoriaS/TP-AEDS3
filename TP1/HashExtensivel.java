@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -526,21 +525,24 @@ public class HashExtensivel {
     */
     public void readHash(int chave) throws Exception
     {
-    
+
         long pos = read(chave);
 
         if (pos == -1) {
-            System.out.println("Chave não encontrada!");
+            System.out.println("Chave não existe");
         } else {
             RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
             arq.seek(pos);
-    
+            char c = arq.readChar();
+        
             int length = arq.readInt();
             byte[] ba = new byte[length];
             arq.read(ba);
             Netflix net_temp = new Netflix();
             net_temp.fromByteArray(ba);
             net_temp.printar();
+          
+
             arq.close();
         }
 
