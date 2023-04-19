@@ -8,37 +8,31 @@ import javax.swing.text.Position;
 public class arvore {
     private int Ordem;
 
-    private int  maxElementos;          // Variável igual a Ordem - 1 para facilitar a clareza do código
-    private int  maxFilhos;             // Variável igual a Ordem para facilitar a clareza do código
-    private RandomAccessFile arquivo;   // Arquivo em que a árvore será armazenada
+    private int  maxElementos;          
+    private int  maxFilhos;             
+    private RandomAccessFile arquivo;   
     private String nomeArquivo;
     
-    // Variáveis usadas nas funções recursivas (já que não é possível passar valores por referência)
+    // Variáveis usadas nas recursioes 
     private int  chaveAux;
     private long     dadoAux;
     private long    nodeAux;
     private boolean cresceu;
     private boolean diminuiu;
 
+    // contrutor, abre arquivo com raiz vazia
     public arvore(int o, String na) throws IOException {    
         
-        // Inicializa os atributos da árvore
+        
         Ordem = o;
         maxElementos = o-1;
         maxFilhos = o;
         nomeArquivo = na;
         
-        // Abre (ou cria) o arquivo, escrevendo uma raiz empty, se necessário.
+      
         arquivo = new RandomAccessFile(nomeArquivo,"rw");
         if(arquivo.length()<8) 
             arquivo.writeLong(-1);  // raiz empty
-    }
-
-    public boolean empty() throws IOException {
-        long raiz;
-        arquivo.seek(0);
-        raiz = arquivo.readLong();
-        return raiz == -1;
     }
 
 
@@ -51,33 +45,26 @@ public class arvore {
             return false;
         }
             
-        // Carrega a raiz
+        // pega a raiz
         arquivo.seek(0);       
         long node;
         node = arquivo.readLong();
 
-        // O processo de inclusão permite que os valores passados como referência
-        // sejam substituídos por outros valores, para permitir a divisão de páginas
-        // e crescimento da árvore. Assim, são usados os valores globais chaveAux 
-        // e dadoAux. Quando há uma divisão, a chave e o valor promovidos são armazenados
-        // nessas variáveis.
+       // coloca nas variaveis globais para nao perder o valor na funcao recursiva
         chaveAux = ID;
         dadoAux = pos;
         
-        // Se houver crescimento, então será criada uma página extra e será mantido um
-        // ponteiro para essa página. Os valores também são globais.
+        // se crescer cria uma nova pagina
         nodeAux = -1;
         cresceu = false;
                 
         // Chamada recursiva para a inserção da chave e do valor
-        // A chave e o valor não são passados como parâmetros, porque são globais
         boolean inserido = create1(node);
         
-        // Testa a necessidade de criação de uma nova raiz.
+        // ve se precisa aumentar ou nao a arvore
         if(cresceu) {
             
-            // Cria a nova página que será a raiz. O ponteiro esquerdo da raiz
-            // será a raiz antiga e o seu ponteiro direito será para a nova página.
+           
             Node nd = new Node(Ordem);
             nd.n = 1;
             nd.chaves[0] = chaveAux;
@@ -85,7 +72,7 @@ public class arvore {
             nd.filhos[0] = node;
             nd.filhos[1] = nodeAux;
             
-            // Acha o espaço em disco. Nesta versão, todas as novas páginas
+            
             // são escrita no fim do arquivo.
             arquivo.seek(arquivo.length());
             long raiz = arquivo.getFilePointer();
@@ -98,8 +85,8 @@ public class arvore {
 
     public boolean create1(long node) throws IOException
     {
-         // Testa se passou para o filho de uma página folha. Nesse caso, 
-        // inicializa as variáveis globais de controle.
+         // testa se passou para o filho de uma página folha. se sim iniciliaza as variaveis  
+       
         if(node==-1) {
             cresceu = true;
             nodeAux = -1;
@@ -345,17 +332,322 @@ public class arvore {
     }
 
 
-    public void uptate(int IdUpdate)
-    {
+ // Remoção elementos na árvore. A remoção é recursiva. A primeira
+    // função chama a segunda recursivamente, passando a raiz como referência.
+    // Eventualmente, a árvore pode reduzir seu tamanho, por meio da exclusão da raiz.
+    public boolean delete(int chave) throws IOException {
+                
+        // Encontra a raiz da árvore
+        arquivo.seek(0);       
+        long pagina;                
+        pagina = arquivo.readLong();
 
+        // variável global de controle da redução do tamanho da árvore
+        diminuiu = false;  
+                
+        // Chama recursivamente a exclusão de registro (na chave1Aux e no 
+        // chave2Aux) passando uma página como referência
+        boolean excluido = delete1(chave, pagina);
+        
+        // Se a exclusão tiver sido possível e a página tiver reduzido seu tamanho,
+        // por meio da fusão das duas páginas filhas da raiz, elimina essa raiz
+        if(excluido && diminuiu) {
+            
+            // Lê a raiz
+            arquivo.seek(pagina);
+            Node pa = new Node(Ordem);
+            byte[] buffer = new byte[pa.TAMANHO_PAGINA];
+            arquivo.read(buffer);
+            pa.fromByteArrayArv(buffer);
+            
+            // Se a página tiver 0 elementos, apenas atualiza o ponteiro para a raiz,
+            // no cabeçalho do arquivo, para o seu primeiro filho.
+            if(pa.n == 0) {
+                arquivo.seek(0);
+                arquivo.writeLong(pa.filhos[0]);  
+            }
+        }
+         
+        return excluido;
     }
+    
 
-    public boolean delete(int IdDelet)
-    {
+    // Função recursiva de exclusão. A função passa uma página de referência.
+    // As exclusões são sempre feitas em folhas e a fusão é propagada para cima.
+    private boolean delete1(int chave, long pagina) throws IOException {
+        
+        // Declaração de variáveis
+        boolean excluido=false;
+        int diminuido;
+        
+        // Testa se o registro não foi encontrado na árvore, ao alcançar uma folha
+        // inexistente (filho de uma folha real)
+        if(pagina==-1) {
+            diminuiu=false;
+            return false;
+        }
+        
+        // Lê o registro da página no arquivo
+        arquivo.seek(pagina);
+        Node pa = new Node(Ordem);
+        byte[] buffer = new byte[pa.TAMANHO_PAGINA];
+        arquivo.read(buffer);
+        pa.fromByteArrayArv(buffer);
 
+        // Encontra a página em que a chave está presente
+        // Nesse primeiro passo, salta todas as chaves menores
+        int i=0;
+        while(i<pa.n && chave > pa.chaves[i] ) {
+            i++;
+        }
 
-    return false;
+        // Chaves encontradas em uma folha
+        if(i<pa.n && pa.filhos[0]==-1 && chave == pa.chaves[i] ) {
+
+            // Puxa todas os elementos seguintes para uma posição anterior, sobrescrevendo
+            // o elemento a ser excluído
+            int j;
+            for(j=i; j<pa.n-1; j++) {
+                pa.chaves[j] = pa.chaves[j+1];
+                pa.dados[j] = pa.dados[j+1];
+            }
+            pa.n--;
+            
+            // limpa o último elemento
+            pa.chaves[pa.n] = -1;
+            pa.dados[pa.n] = 0;
+            
+            // Atualiza o registro da página no arquivo
+            arquivo.seek(pagina);
+            arquivo.write(pa.toByteArrayArv());
+            
+            // Se a página contiver menos elementos do que o mínimo necessário,
+            // indica a necessidade de fusão de páginas
+            diminuiu = pa.n<maxElementos/2;
+            return true;
+        }
+
+        // Se a chave não tiver sido encontrada (observar o return true logo acima),
+        // continua a busca recursiva por uma nova página. A busca continuará até o
+        // filho inexistente de uma página folha ser alcançado.
+        // A variável diminuído mantem um registro de qual página eventualmente 
+        // pode ter ficado com menos elementos do que o mínimo necessário.
+        // Essa página será filha da página atual
+        if(i==pa.n || chave < pa.chaves[i] ) {
+            excluido = delete1(chave, pa.filhos[i]);
+            diminuido = i;
+        } else {
+            excluido = delete1(chave, pa.filhos[i+1]);
+            diminuido = i+1;
+        }
+        
+        
+        // A partir deste ponto, o código é executado após o retorno das chamadas
+        // recursivas do método
+        
+        // Testa se há necessidade de fusão de páginas
+        if(diminuiu) {
+
+            // Carrega a página filho que ficou com menos elementos do 
+            // do que o mínimo necessário
+            long paginaFilho = pa.filhos[diminuido];
+            Node pFilho = new Node(Ordem);
+            arquivo.seek(paginaFilho);
+            arquivo.read(buffer);
+            pFilho.fromByteArrayArv(buffer);
+            
+            // Cria uma página para o irmão (da direita ou esquerda)
+            long paginaIrmao;
+            Node pIrmao;
+            
+            // Tenta a fusão com irmão esquerdo
+            if(diminuido>0) {
+                
+                // Carrega o irmão esquerdo
+                paginaIrmao = pa.filhos[diminuido-1];
+                pIrmao = new Node(Ordem);
+                arquivo.seek(paginaIrmao);
+                arquivo.read(buffer);
+                pIrmao.fromByteArrayArv(buffer);
+                
+                // Testa se o irmão pode ceder algum registro
+                if(pIrmao.n>maxElementos/2) {
+                    
+                    // Move todos os elementos do filho aumentando uma posição
+                    // à esquerda, gerando espaço para o elemento cedido
+                    for(int j=pFilho.n; j>0; j--) {
+                        pFilho.chaves[j] = pFilho.chaves[j-1];
+                        pFilho.dados[j] = pFilho.dados[j-1];
+                        pFilho.filhos[j+1] = pFilho.filhos[j];
+                    }
+                    pFilho.filhos[1] = pFilho.filhos[0];
+                    pFilho.n++;
+                    
+                    // Se for folha, copia o elemento do irmão, já que o do pai
+                    // será extinto ou repetido
+                    if(pFilho.filhos[0]==-1) {
+                        pFilho.chaves[0] = pIrmao.chaves[pIrmao.n-1];
+                        pFilho.dados[0] = pIrmao.dados[pIrmao.n-1];
+                    }
+                    
+                    // Se não for folha, rotaciona os elementos, descendo o elemento do pai
+                    else {
+                        pFilho.chaves[0] = pa.chaves[diminuido-1];
+                        pFilho.dados[0] = pa.dados[diminuido-1];
+                    }
+
+                    // Copia o elemento do irmão para o pai (página atual)
+                    pa.chaves[diminuido-1] = pIrmao.chaves[pIrmao.n-1];
+                    pa.dados[diminuido-1] = pIrmao.dados[pIrmao.n-1];
+                        
+                    
+                    // Reduz o elemento no irmão
+                    pFilho.filhos[0] = pIrmao.filhos[pIrmao.n];
+                    pIrmao.n--;
+                    diminuiu = false;
+                }
+                
+                // Se não puder ceder, faz a fusão dos dois irmãos
+                else {
+
+                    // Se a página reduzida não for folha, então o elemento 
+                    // do pai deve ser copiado para o irmão
+                    if(pFilho.filhos[0] != -1) {
+                        pIrmao.chaves[pIrmao.n] = pa.chaves[diminuido-1];
+                        pIrmao.dados[pIrmao.n] = pa.dados[diminuido-1];
+                        pIrmao.filhos[pIrmao.n+1] = pFilho.filhos[0];
+                        pIrmao.n++;
+                    }
+                    
+                    
+                    // Copia todos os registros para o irmão da esquerda
+                    for(int j=0; j<pFilho.n; j++) {
+                        pIrmao.chaves[pIrmao.n] = pFilho.chaves[j];
+                        pIrmao.dados[pIrmao.n] = pFilho.dados[j];
+                        pIrmao.filhos[pIrmao.n+1] = pFilho.filhos[j+1];
+                        pIrmao.n++;
+                    }
+                    pFilho.n = 0;   // aqui o endereço do filho poderia ser incluido em uma lista encadeada no cabeçalho, indicando os espaços reaproveitáveis
+                    
+                    // Se as páginas forem folhas, copia o ponteiro para a folha seguinte
+              //      if(pIrmao.filhos[0]==-1)
+                     //   pIrmao.proxima = pFilho.proxima;
+                    
+                    // puxa os registros no pai
+                    int j;
+                    for(j=diminuido-1; j<pa.n-1; j++) {
+                        pa.chaves[j] = pa.chaves[j+1];
+                        pa.dados[j] = pa.dados[j+1];
+                        pa.filhos[j+1] = pa.filhos[j+2];
+                    }
+                    pa.chaves[j] = -1;
+                    pa.dados[j] = -1;
+                    pa.filhos[j+1] = -1;
+                    pa.n--;
+                    diminuiu = pa.n<maxElementos/2;  // testa se o pai também ficou sem o número mínimo de elementos
+                }
+            }
+            
+            // Faz a fusão com o irmão direito
+            else {
+                
+                // Carrega o irmão
+                paginaIrmao = pa.filhos[diminuido+1];
+                pIrmao = new Node(Ordem);
+                arquivo.seek(paginaIrmao);
+                arquivo.read(buffer);
+                pIrmao.fromByteArrayArv(buffer);
+                
+                // Testa se o irmão pode ceder algum elemento
+                if(pIrmao.n>maxElementos/2) {
+                    
+                    // Se for folha
+                    if( pFilho.filhos[0]==-1 ) {
+                    
+                        //copia o elemento do irmão
+                        pFilho.chaves[pFilho.n] = pIrmao.chaves[0];
+                        pFilho.dados[pFilho.n] = pIrmao.dados[0];
+                        pFilho.filhos[pFilho.n+1] = pIrmao.filhos[0];
+                        pFilho.n++;
+
+                        // sobe o próximo elemento do irmão
+                        pa.chaves[diminuido] = pIrmao.chaves[1];
+                        pa.dados[diminuido] = pIrmao.dados[1];
+                        
+                    } 
+                    
+                    // Se não for folha, rotaciona os elementos
+                    else {
+                        
+                        // Copia o elemento do pai, com o ponteiro esquerdo do irmão
+                        pFilho.chaves[pFilho.n] = pa.chaves[diminuido];
+                        pFilho.dados[pFilho.n] = pa.dados[diminuido];
+                        pFilho.filhos[pFilho.n+1] = pIrmao.filhos[0];
+                        pFilho.n++;
+                        
+                        // Sobe o elemento esquerdo do irmão para o pai
+                        pa.chaves[diminuido] = pIrmao.chaves[0];
+                        pa.dados[diminuido] = pIrmao.dados[0];
+                    }
+                    
+                    // move todos os registros no irmão para a esquerda
+                    int j;
+                    for(j=0; j<pIrmao.n-1; j++) {
+                        pIrmao.chaves[j] = pIrmao.chaves[j+1];
+                        pIrmao.dados[j] = pIrmao.dados[j+1];
+                        pIrmao.filhos[j] = pIrmao.filhos[j+1];
+                    }
+                    pIrmao.filhos[j] = pIrmao.filhos[j+1];
+                    pIrmao.n--;
+                    diminuiu = false;
+                }
+                
+                // Se não puder ceder, faz a fusão dos dois irmãos
+                else {
+
+                    // Se a página reduzida não for folha, então o elemento 
+                    // do pai deve ser copiado para o irmão
+                    if(pFilho.filhos[0] != -1) {
+                        pFilho.chaves[pFilho.n] = pa.chaves[diminuido];
+                        pFilho.dados[pFilho.n] = pa.dados[diminuido];
+                        pFilho.filhos[pFilho.n+1] = pIrmao.filhos[0];
+                        pFilho.n++;
+                    }
+                    
+                    // Copia todos os registros do irmão da direita
+                    for(int j=0; j<pIrmao.n; j++) {
+                        pFilho.chaves[pFilho.n] = pIrmao.chaves[j];
+                        pFilho.dados[pFilho.n] = pIrmao.dados[j];
+                        pFilho.filhos[pFilho.n+1] = pIrmao.filhos[j+1];
+                        pFilho.n++;
+                    }
+                    pIrmao.n = 0;   // aqui o endereço do irmão poderia ser incluido em uma lista encadeada no cabeçalho, indicando os espaços reaproveitáveis
+                    
+                    // Se a página for folha, copia o ponteiro para a próxima página
+             //       pFilho.proxima = pIrmao.proxima;
+                    
+                    // puxa os registros no pai
+                    for(int j=diminuido; j<pa.n-1; j++) {
+                        pa.chaves[j] = pa.chaves[j+1];
+                        pa.dados[j] = pa.dados[j+1];
+                        pa.filhos[j+1] = pa.filhos[j+2];
+                    }
+                    pa.n--;
+                    diminuiu = pa.n<maxElementos/2;  // testa se o pai também ficou sem o número mínimo de elementos
+                }
+            }
+            
+            // Atualiza todos os registros
+            arquivo.seek(pagina);
+            arquivo.write(pa.toByteArrayArv());
+            arquivo.seek(paginaFilho);
+            arquivo.write(pFilho.toByteArrayArv());
+            arquivo.seek(paginaIrmao);
+            arquivo.write(pIrmao.toByteArrayArv());
+        }
+        return excluido;
     }
+    
 
    
 
