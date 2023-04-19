@@ -714,9 +714,13 @@ public class Netflix {
         sc.close();
     }
 
-    static public void TelaInicial() throws IOException {
+    
+
+    static public void TelaInicial() throws Exception {
 
         int x = 0;
+        int y =0;
+        int numCesto =0;
         Crud c = new Crud();
         ordenacao ord = new ordenacao();
         long pos;
@@ -737,9 +741,6 @@ public class Netflix {
             System.out.println(x);
 
             switch (x) {
-                case 0:
-                    
-                    break;
                 case 1:
                 TelaArquiSeq();
                     break;
@@ -747,7 +748,35 @@ public class Netflix {
                  TelaArvore();
                     break;
                 case 3:
-             
+                    do{
+                        System.out.println("Quantidade de elementos por cesto:");
+                        numCesto = sc.nextInt();
+                        HashExtensivel h = new HashExtensivel(numCesto,"Index.db","Cesto.db");
+
+                        System.out.println("\nOpcoes ");
+                        System.out.println(" 0 - parar");
+                        System.out.println(" 1 - Criar a Hash");
+                        System.out.println(" 2 - Creat");
+                        System.out.println(" 3 - Uptade");
+                        System.out.println(" 4 - Uptade");
+                        y = sc.nextInt();
+
+                        switch(y){
+                            case 1:
+                                h.LerRegistroHash("teste2.csv", "teste.db");
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;  
+                            case 4:
+                                break;   
+                            case 5:
+                                break;       
+                        }
+                    }while(y!=0);
+                   
+                    
                     break;
                 case 4:
 
@@ -763,7 +792,7 @@ public class Netflix {
         sc.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
       
         TelaInicial();
 
@@ -772,3 +801,4 @@ public class Netflix {
 	public void setCast(String readUTF) {
 	}
 }
+
