@@ -5,15 +5,20 @@ import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 public class CrudArvore {
+    // Essa classe serve como um intermediario entre a Netflix/Crud/Arvore, em que acessara essa classes
+    // para fazer alteracoes nas estruturas
     Crud c ;
     arvore ARV ;
     Scanner sc = new Scanner(System.in);
+
+    // contrutor da classe, ja inicia o arquivo junto e com ordem 8
     CrudArvore() throws IOException
     {
     c = new Crud();
     ARV = new arvore(8, "indexArv.db");
     }
-
+    
+    // um create em que vc nao passa nada com referencia, pelo terminal pede os valores
     public void createArv() throws IOException {
         Netflix net = c.preCreate();
         long pos = c.createPos(net);
@@ -24,7 +29,7 @@ public class CrudArvore {
         
     }
 
-    
+    // passa o obj netflix direto, usado para montar o arquivo inicial
     public void createArv2(Netflix net) throws IOException {
         
         long pos = c.createPos(net);
@@ -35,6 +40,7 @@ public class CrudArvore {
         
     }
 
+    // chama a funcao da arvore e verifica se existe ou nao o registro
     public void readArv() throws IOException
     {
         
@@ -66,6 +72,8 @@ public class CrudArvore {
 
     }
 
+    //  vai ter dois tipos de update um q subistuiu o arquivo sequencia e outro q nao
+    // essa funcao identifica qual usar
     public void updateArv() throws IOException
     {
        
@@ -104,6 +112,7 @@ public class CrudArvore {
             {
                 
                 // UPDATE colocando um novo
+            ARV.delete(net_temp.Id);
             arq.seek(pos);
             arq.writeChar('*');
             arq.seek(0);
@@ -129,11 +138,26 @@ public class CrudArvore {
 
     }
 
-    public void deleteARV()
-    {
 
+    // chama o delete e verifica se deletou
+    public void deleteARV() throws IOException
+    {
+        System.out.println("Qual Id deseja Deletar:");
+        int Num2 = sc.nextInt();
+
+        Boolean b1 = ARV.delete(Num2);
+        c.delete(Num2);
+
+        if (b1) {
+            System.out.println("Deletado");
+        } else {
+            System.out.println("n tem esse registro ou ele ja esta deletado");
+        }
+        
     }
     
+    // essa funcao basicamente le o registro e escreve no arquivo sequencia
+    // e na arvore, ela demora para ser executada!
     public void LerRegistroEfazerArvore( String s1, String s2 ,int NumRegistros) throws IOException
     {
 
@@ -152,4 +176,5 @@ public class CrudArvore {
         bf.close();
       
     }
+
 }

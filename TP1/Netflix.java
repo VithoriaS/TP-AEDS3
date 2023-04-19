@@ -541,7 +541,7 @@ public class Netflix {
          
     }
 
-
+    
     static public void TelaArvore() throws IOException {
 
         int x = 0;
@@ -579,19 +579,7 @@ public class Netflix {
                 crudA.updateArv();
                     break;
                 case 4:
-                /* 
-
-                System.out.println("Qual Id deseja Deletar:");
-                    int Num2 = sc.nextInt();
-   
-                    Boolean b1 = ARV.delete(Num2);
-
-                    if (b1) {
-                        System.out.println("Deletado");
-                    } else {
-                        System.out.println("n tem esse registro ou ele ja esta deletado");
-                    }
-                    */
+                crudA.deleteARV();
                     break;
                 case 5:
                 
