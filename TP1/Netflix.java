@@ -731,7 +731,7 @@ public class Netflix {
             System.out.println(" 1 - ArqSequencial");
             System.out.println(" 2 - Arvore");
             System.out.println(" 3 - Hash");
-            System.out.println(" 4 - Lista Invertida");
+            System.out.println(" 4 - Criar BASE DE DADOS");
 
 
 
@@ -780,7 +780,7 @@ public class Netflix {
                     break;
                 case 4:
 
-                    
+                LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
                     break;
              
 

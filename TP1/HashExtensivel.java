@@ -18,6 +18,7 @@ public class HashExtensivel {
     RandomAccessFile arqCestos;
     int              quantidadeDadosPorCesto;
     Diretório        diretório;
+    Crud c;
     
     class Cesto {
 
@@ -25,9 +26,10 @@ public class HashExtensivel {
         short  quantidade;          // quantidade de pares presentes no cesto
         short  quantidadeMaxima;    // quantidade máxima de pares que o cesto pode conter
         int[]  chaves;              // sequência de chaves armazenadas no cesto
-        Netflix[] dados;               // sequência de dados correspondentes às chaves
+        long[] dados;               // sequência de dados correspondentes às chaves
         short  bytesPorPar;         // size fixo de cada par de chave/dado em bytes
         short  bytesPorCesto;       // size fixo do cesto em bytes
+        Crud c;
 
         public Cesto(int qtdmax) throws Exception {
             this(qtdmax, 0);
@@ -42,121 +44,49 @@ public class HashExtensivel {
             quantidade = 0;
             quantidadeMaxima = (short)qtdmax;
             chaves = new int[quantidadeMaxima];
-            dados = new Netflix[quantidadeMaxima];
+            dados =new long[quantidadeMaxima];
             bytesPorPar = 12;  // int + long
             bytesPorCesto = (short)(bytesPorPar * quantidadeMaxima + 3);
         }
 
         public byte[] toByteArray() throws IOException {
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream dos = new DataOutputStream(baos);
-
             dos.writeByte(profundidadeLocal);
             dos.writeShort(quantidade);
             int i=0;
             while(i<quantidade) {
                 dos.writeInt(chaves[i]);
-                //--MUDAR
-                dos.writeInt(dados[i].getId());
-                dos.writeUTF(dados[i].getType());
-                dos.writeUTF(dados[i].getName());
-
-                if (dados[i].getCast() == null) {
-                    dos.writeInt(0);
-                } else {
-                    dos.writeInt(dados[i].getCast().length);
-                    // System.out.println("Cast.length: " + Cast.length);
-                    for (int j = 0; j < dados[j].getCast().length; i++) {
-                       // dos.writeInt(Cast[i].length());
-                        // System.out.println("Cast[i].length(): " + Cast[i].length());
-                        // System.out.println("Cast[i]: " + Cast[i]);
-                        dos.writeUTF(dados[i].getCast()[j]);
-                    }
-                }
-                
-                dos.writeUTF(dados[i].getData_added().getMes());
-                dos.writeInt(dados[i].getData_added().getDia());
-                dos.writeInt(dados[i].getData_added().getAno());
-
-                if (dados[i].getListed_in() == null) {
-                    dos.writeInt(0);
-                } else {
-                    dos.writeInt(dados[i].getListed_in().length);
-                    // System.out.println("Listed_in.length: " + Listed_in.length);
-                    for (int j = 0; j < dados[i].getListed_in().length; j++) {
-                       // dos.writeInt(Listed_in[i].length());
-                        // System.out.println("Listed_in[i].length(): " + Listed_in[i].length());
-                        // System.out.println("Listed_in[i]: " + Listed_in[i]);
-                        dos.writeUTF(dados[i].getListed_in()[j]);
-                    }
-                }
-
-                dos.writeUTF(dados[i].getDescription());
-
-                //dos.writeLong(dados[i]);
+                dos.writeLong(dados[i]);
                 i++;
             }
-
             while(i<quantidadeMaxima) {
                 dos.writeInt(0);
                 dos.writeLong(0);
                 i++;
             }
-            return baos.toByteArray();            
+            return baos.toByteArray();    
         }
 
         public void fromByteArray(byte[] ba) throws IOException {
             ByteArrayInputStream bais = new ByteArrayInputStream(ba);
             DataInputStream dis = new DataInputStream(bais);
-
-            String[] aux = null;
-
             profundidadeLocal = dis.readByte();
             quantidade = dis.readShort();
-
             int i=0;
             while(i<quantidadeMaxima) {
                 chaves[i] = dis.readInt();
-                dados[i].setId(dis.readInt());
-                dados[i].setType(dis.readUTF());
-                dados[i].setName(dis.readUTF());
-
-                int length = dis.readInt();
-                aux = new String[length];
-
-                for (int j = 0; j < length; j++) {
-                    ///ERRROOOOOO  BLABLABLA
-                    //Cast[i] = dis.readUTF();
-                   aux[j] = dis.readUTF();
-                }
-                //--------------TALVEZ DE ERRO --------
-                dados[i].setCast(aux);
-
-                dados[i].getData_added().setMes(dis.readUTF());
-                dados[i].getData_added().setDia(dis.readInt());
-                dados[i].getData_added().setAno(dis.readInt());
-
-
-                length = dis.readInt();
-                //Listed_in = new String[length];
-                dados[i].tamanhoListed_in(length);
-                aux = new String[length];
-                for(int j = 0; j < length; j++) {
-                    aux[j] = dis.readUTF();
-                }
-
-                dados[i].setListed_in(aux);
-
-                dados[i].setDescription(dis.readUTF());
-
-    
-                //-MUDAR
-                //dados[i] = dis.readLong();
+                dados[i] = dis.readLong();
                 i++;
             }
+
+             
         }
 
-        public boolean create(int c, Netflix d) {
+        
+
+        public boolean create(int c, long d) {
             if(full())
                 return false;
             int i=quantidade-1;
@@ -172,19 +102,19 @@ public class HashExtensivel {
             return true;
         }
 
-        public Netflix read(int c) {
+        public long read(int c) {
             if(empty())
-                return null;
+                return -1;
             int i=0;
             while(i<quantidade && c>chaves[i])
                 i++;
             if(i<quantidade && c==chaves[i])
                 return dados[i];
             else
-                return null;        
+                return -1;        
         }
 
-        public boolean update(int c, Netflix d) {
+        public boolean update(int c, long d) {
             if(empty())
                 return false;
             int i=0;
@@ -252,12 +182,14 @@ public class HashExtensivel {
 
         byte   profundidadeGlobal;
         long[] endereços;
+        Crud c;
 
         public Diretório() {
             profundidadeGlobal = 0;
             endereços = new long[1];
             endereços[0] = 0;
         }
+
 
         public boolean atualizaEndereco(int p, long e) {
             if(p>Math.pow(2,profundidadeGlobal))
@@ -346,6 +278,7 @@ public class HashExtensivel {
         quantidadeDadosPorCesto = n;
         nomeArquivoDiretorio = nd;
         nomeArquivoCestos = nc;
+        c = new Crud();
         
         
         arqDiretório = new RandomAccessFile(nomeArquivoDiretorio,"rw");
@@ -366,8 +299,18 @@ public class HashExtensivel {
             arqCestos.write(bd);
         }
     }
+
+    public void createHash(Netflix net) throws Exception {
+        
+        long pos = c.createPos(net);
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        int id = arq.readInt();
+        arq.close();
+        create(id, pos);
+        
+    }
     
-    public boolean create(int chave, Netflix dado) throws Exception {
+    public boolean create(int chave, long dado) throws Exception {
         
         //Carrega o diretório
         byte[] bd = new byte[(int)arqDiretório.length()];
@@ -388,7 +331,7 @@ public class HashExtensivel {
         c.fromByteArray(ba);
         
         // Testa se a chave já não existe no cesto
-        if(c.read(chave)!= null)
+        if(c.read(chave)!= -1)
             throw new Exception("Chave já existe");     
 
         // Testa se o cesto já não está cheio
@@ -442,7 +385,7 @@ public class HashExtensivel {
 
     }
     
-    public Netflix read(int chave) throws Exception {
+    public long read(int chave) throws Exception {
         
         //Carrega o diretório
         byte[] bd = new byte[(int)arqDiretório.length()];
@@ -465,7 +408,7 @@ public class HashExtensivel {
         return c.read(chave);
     }
     
-    public boolean update(int chave, Netflix novoDado) throws Exception {
+    public boolean update(int chave, long novoDado) throws Exception {
         
         //Carrega o diretório
         byte[] bd = new byte[(int)arqDiretório.length()];
@@ -555,7 +498,7 @@ public class HashExtensivel {
 
         byte[] ba;
 
-        BufferedReader bf = new BufferedReader(new FileReader(s1));
+        BufferedReader bf = new BufferedReader(new FileReader("teste2.csv"));
         RandomAccessFile arq = new RandomAccessFile(s2, "rw");
         arq.writeInt(0);
         arq.close();
@@ -563,7 +506,7 @@ public class HashExtensivel {
         for (int j = 0; j < 8807; j++) {
             Netflix net =  new Netflix(bf.readLine());
     
-            create(net.getId(), net);
+            createHash(net);
         }
         bf.close();
       
