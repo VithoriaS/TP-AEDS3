@@ -300,6 +300,16 @@ public class HashExtensivel {
         }
     }
 
+    public void createHash() throws Exception {
+        Netflix net = c.preCreate();
+        long pos = c.createPos(net);
+        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+        int id = arq.readInt();
+        arq.close();
+        create(id, pos);
+        
+    }
+
     public void createHash(Netflix net) throws Exception {
         
         long pos = c.createPos(net);
@@ -408,6 +418,35 @@ public class HashExtensivel {
         return c.read(chave);
     }
     
+    public void readHash(int chave) throws Exception
+    {
+    
+        long pos = read(chave);
+
+        if (pos == -1) {
+            System.out.println("Nao Tem");
+        } else {
+            RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+            arq.seek(pos);
+            char c = arq.readChar();
+            if (c == '*') {
+                System.out.println("Registro nao exite");
+            }
+            else{
+                int length = arq.readInt();
+                byte[] ba = new byte[length];
+                arq.read(ba);
+                Netflix net_temp = new Netflix();
+                net_temp.fromByteArray(ba);
+                net_temp.printar();
+            }
+          
+
+            arq.close();
+        }
+
+    }
+
     public boolean update(int chave, long novoDado) throws Exception {
         
         //Carrega o diretório

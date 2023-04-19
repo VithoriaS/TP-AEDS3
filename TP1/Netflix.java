@@ -748,9 +748,10 @@ public class Netflix {
                  TelaArvore();
                     break;
                 case 3:
+                    System.out.println("Quantidade de elementos por cesto:");
+                    numCesto = sc.nextInt();
                     do{
-                        System.out.println("Quantidade de elementos por cesto:");
-                        numCesto = sc.nextInt();
+                        
                         HashExtensivel h = new HashExtensivel(numCesto,"Index.db","Cesto.db");
 
                         System.out.println("\nOpcoes ");
@@ -758,7 +759,8 @@ public class Netflix {
                         System.out.println(" 1 - Criar a Hash");
                         System.out.println(" 2 - Creat");
                         System.out.println(" 3 - Uptade");
-                        System.out.println(" 4 - Uptade");
+                        System.out.println(" 4 - Read");
+                        System.out.println(" 5 - Delete");
                         y = sc.nextInt();
 
                         switch(y){
@@ -766,10 +768,14 @@ public class Netflix {
                                 h.LerRegistroHash("teste2.csv", "teste.db");
                                 break;
                             case 2:
+                                h.createHash();
                                 break;
                             case 3:
                                 break;  
                             case 4:
+                            System.out.println("Digite a chave (ID) que voce quer Ler: ");
+                            int chave = sc.nextInt();
+                            h.readHash(chave);
                                 break;   
                             case 5:
                                 break;       
