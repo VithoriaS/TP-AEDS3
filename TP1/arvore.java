@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-
-import javax.swing.text.Position;
 
 public class arvore {
     private int Ordem;

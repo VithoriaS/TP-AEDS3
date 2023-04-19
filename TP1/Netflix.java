@@ -182,6 +182,11 @@ public class Netflix {
         Listed_in = listed_in;
     }
 
+    public void tamanhoListed_in(int length ) {
+        Listed_in = new String[length];
+    }
+
+
     public String getDescription() {
         return Description;
     }
@@ -599,6 +604,55 @@ public class Netflix {
         sc.close();
     }
 
+    static public void TelaArquiHash() throws Exception {
+        int y =0;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Quantidade de elementos por cesto:");
+        int numCesto = sc.nextInt();
+        do{
+            
+            HashExtensivel h = new HashExtensivel(numCesto,"Index.db","Cesto.db");
+
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - parar");
+            System.out.println(" 1 - Criar a Hash");
+            System.out.println(" 2 - Creat");
+            System.out.println(" 3 - Uptade");
+            System.out.println(" 4 - Read");
+            System.out.println(" 5 - Delete");
+            y = sc.nextInt();
+
+            switch(y){
+                case 1:
+                    h.LerRegistroHash("teste2.csv", "teste.db");
+                    break;
+                case 2:
+                    h.createHash();
+                    break;
+                case 3:
+                    System.out.println("Digite a chave (ID) que voce quer mudar: ");
+                    int chave1 = sc.nextInt();
+                    h.updateHash(chave1);
+                break;  
+
+                case 4:
+                    System.out.println("Digite a chave (ID) que voce quer Ler: ");
+                    int chave = sc.nextInt();
+                    h.readHash(chave);
+                break;   
+
+                case 5:
+                    System.out.println("Digite a chave (ID) que voce quer deletar: ");
+                    int chave2 = sc.nextInt();
+                    if(h.delete(chave2)){
+                        System.out.println("Elemente deletado com Sucesso!");
+                    }else{
+                        System.out.println("Elemento não deletado");
+                    }
+                break;       
+            }
+        }while(y!=0);
+    }
 
     static public void TelaArquiSeq() throws IOException {
 
@@ -697,9 +751,13 @@ public class Netflix {
         sc.close();
     }
 
-    static public void TelaInicial() throws IOException {
+    
+
+    static public void TelaInicial() throws Exception {
 
         int x = 0;
+        int y =0;
+        int numCesto =0;
         Crud c = new Crud();
         ordenacao ord = new ordenacao();
         long pos;
@@ -710,7 +768,7 @@ public class Netflix {
             System.out.println(" 1 - ArqSequencial");
             System.out.println(" 2 - Arvore");
             System.out.println(" 3 - Hash");
-            System.out.println(" 4 - Lista Invertida");
+            System.out.println(" 4 - Criar BASE DE DADOS");
 
 
 
@@ -720,23 +778,17 @@ public class Netflix {
             System.out.println(x);
 
             switch (x) {
-                case 0:
-                    
-                    break;
                 case 1:
-                TelaArquiSeq();
+                    TelaArquiSeq();
                     break;
                 case 2:
-                 TelaArvore();
+                    TelaArvore();
                     break;
                 case 3:
-             
-                    break;
+                     TelaArquiHash();
                 case 4:
-
-                    
+                    LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
                     break;
-             
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
@@ -746,9 +798,13 @@ public class Netflix {
         sc.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
       
         TelaInicial();
 
     }
+
+	public void setCast(String readUTF) {
+	}
 }
+
