@@ -586,62 +586,63 @@ public class HashExtensivel {
         
     }
 
-    public void updateHash(int chave) throws Exception{
-       
-        System.out.println("Qual Id deseja Update:");
-        long pos = read(chave);
-        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
-            arq.seek(pos);
-            System.out.println(pos);
-    
-            int length = arq.readInt();
-            byte[] ba = new byte[length];
-            arq.read(ba);
-            Netflix net_temp = new Netflix();
-            net_temp.fromByteArray(ba);
-
-            Netflix net = c.preCreate();
-            net.Id = net_temp.Id;
-
-            byte[] ba2 = net.toByteArray();
-
-            int length2 = ba2.length;
-            if(length > length2)
-            {
-                
-                // UPDATE sem colocar um novo
-                arq.seek(pos);
-                arq.readChar();
-                arq.readInt();
-                arq.write(ba2);
-            }
-            else
-            {
-                
-                // UPDATE colocando um novo
-            arq.seek(pos);
-            arq.seek(0);
-            int tamanho = arq.readInt();
-            tamanho = tamanho + 1;
-            arq.seek(0);
-            arq.writeInt(tamanho);
-           long pos2 = arq.length();
-            arq.seek(arq.length());
-            net.Id = tamanho;
-            
-             byte[]  ba3 = net.toByteArray();
-            arq.writeChar(' ');
-            arq.writeInt(ba3.length);
-            arq.write(ba3);
-            
-            create(net.Id, pos2 );
-            }
-
+        public void updateHash(int chave, long pos) throws Exception
+        {
         
-        arq.close();
-        
+            RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
+            arq.seek(pos);
+            char cha = arq.readChar();
+            if (cha == '*') {
+                System.out.println("Registro não exite!");
+            }
+            else{
+                int length = arq.readInt();
+                byte[] ba = new byte[length];
+                arq.read(ba);
+                Netflix net_temp = new Netflix();
+                net_temp.fromByteArray(ba);
 
-    }
+                Netflix net = c.preCreate();
+                net.Id = net_temp.Id;
+
+                byte[] ba2 = net.toByteArray();
+
+                int length2 = ba2.length;
+                if(length > length2){
+                    
+                    // UPDATE sem colocar um novo
+                    arq.seek(pos);
+                    arq.readChar();
+                    arq.readInt();
+                    arq.write(ba2);
+                } else {
+                    
+                    // UPDATE colocando um novo
+                    delete(chave);
+                    arq.seek(pos);
+                    arq.writeChar('*');
+                    arq.seek(0);
+                    int tamanho = arq.readInt();
+                    tamanho = tamanho + 1;
+                    arq.seek(0);
+                    arq.writeInt(tamanho);
+                    long pos2 = arq.length();
+                    arq.seek(arq.length());
+                    net.Id = tamanho;
+                
+                    byte[]  ba3 = net.toByteArray();
+                    arq.writeChar(' ');
+                    arq.writeInt(ba3.length);
+                    arq.write(ba3);
+                
+                    create(net.Id, pos2 );
+                }
+
+            }
+            arq.close();
+            
+
+        }
     
     /**
      * Esta função recebe uma chave como parâmetro e busca essa 
