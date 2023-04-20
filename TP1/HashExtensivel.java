@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -526,118 +525,94 @@ public class HashExtensivel {
     */
     public void readHash(int chave) throws Exception
     {
-    
+
         long pos = read(chave);
 
         if (pos == -1) {
-            System.out.println("Chave não encontrada!");
+            System.out.println("Chave não existe");
         } else {
             RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
             arq.seek(pos);
-    
+            char c = arq.readChar();
+        
             int length = arq.readInt();
             byte[] ba = new byte[length];
             arq.read(ba);
             Netflix net_temp = new Netflix();
             net_temp.fromByteArray(ba);
             net_temp.printar();
+          
+
             arq.close();
         }
 
     }
 
-    /**
-    *Atualiza o valor armazenado na tabela hash para a chave especificada com o novo dado fornecido.
-    *@param chave a chave para a qual o valor será atualizado
-    *@param novoDado o novo valor a ser armazenado na tabela hash para a chave especificada
-    *@return true se a atualização foi bem-sucedida, false caso contrário
-    *@throws Exception se ocorrer um erro durante o processo de atualização
-    */
-    public boolean update(int chave, long novoDado) throws Exception {
-        
-        //Carrega o diretório
-        byte[] bd = new byte[(int)arqDiretório.length()];
-        arqDiretório.seek(0);
-        arqDiretório.read(bd);
-        diretório = new Diretório();
-        diretório.fromByteArray(bd);        
-        
-        // Identifica a hash do diretório,
-        int i = diretório.hash(chave);
-        
-        // Recupera o cesto
-        long endereçoCesto = diretório.endereço(i);
-        Cesto c = new Cesto(qtdCesto);
-        byte[] ba = new byte[c.size()];
-        arqCestos.seek(endereçoCesto);
-        arqCestos.read(ba);
-        c.fromByteArray(ba);
-        
-        // atualiza o dado
-        if(!c.update(chave, novoDado))
-            return false;
-        
-        // Atualiza o cesto
-        arqCestos.seek(endereçoCesto);
-        arqCestos.write(c.toByteArray());
-        return true;
-        
-    }
-
-    public void updateHash(int chave) throws Exception{
-       
-        System.out.println("Qual Id deseja Update:");
-        long pos = read(chave);
-        RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
-            arq.seek(pos);
-            System.out.println(pos);
     
-            int length = arq.readInt();
-            byte[] ba = new byte[length];
-            arq.read(ba);
-            Netflix net_temp = new Netflix();
-            net_temp.fromByteArray(ba);
-
-            Netflix net = c.preCreate();
-            net.Id = net_temp.Id;
-
-            byte[] ba2 = net.toByteArray();
-
-            int length2 = ba2.length;
-            if(length > length2)
-            {
-                
-                // UPDATE sem colocar um novo
-                arq.seek(pos);
-                arq.readChar();
-                arq.readInt();
-                arq.write(ba2);
-            }
-            else
-            {
-                
-                // UPDATE colocando um novo
+    /**
+     * Atualiza o registro com a chave especificada na tabela hash,
+     * atualizando o registro no cesto correspondente.
+     * Se o registro já existir no cesto, atualiza diretamente nele.
+     * Se o registro não existir no cesto, apaga o registro antigo e insere um novo.
+     *
+     * @param chave a chave do registro a ser atualizado
+     * @param pos a posição do registro a ser atualizado no arquivo
+     * @throws Exception se ocorrer algum erro durante a atualização
+     */
+    public void updateHash(int chave, long pos) throws Exception{
+        
+            RandomAccessFile arq = new RandomAccessFile("teste.db", "rw");
             arq.seek(pos);
-            arq.seek(0);
-            int tamanho = arq.readInt();
-            tamanho = tamanho + 1;
-            arq.seek(0);
-            arq.writeInt(tamanho);
-           long pos2 = arq.length();
-            arq.seek(arq.length());
-            net.Id = tamanho;
-            
-             byte[]  ba3 = net.toByteArray();
-            arq.writeChar(' ');
-            arq.writeInt(ba3.length);
-            arq.write(ba3);
-            
-            create(net.Id, pos2 );
+            char cha = arq.readChar();
+            if (cha == '*') {
+                System.out.println("Registro não exite!");
             }
+            else{
+                int length = arq.readInt();
+                byte[] ba = new byte[length];
+                arq.read(ba);
+                Netflix net_temp = new Netflix();
+                net_temp.fromByteArray(ba);
 
-        
-        arq.close();
-        
+                Netflix net = c.preCreate();
+                net.Id = net_temp.Id;
+
+                byte[] ba2 = net.toByteArray();
+
+                int length2 = ba2.length;
+                if(length > length2){
+                    
+                    // UPDATE sem colocar um novo
+                    arq.seek(pos);
+                    arq.readChar();
+                    arq.readInt();
+                    arq.write(ba2);
+                } else {
+                    
+                    // UPDATE colocando um novo
+                    delete(chave);
+                    arq.seek(pos);
+                    arq.writeChar('*');
+                    arq.seek(0);
+                    int tamanho = arq.readInt();
+                    tamanho = tamanho + 1;
+                    arq.seek(0);
+                    arq.writeInt(tamanho);
+                    long pos2 = arq.length();
+                    arq.seek(arq.length());
+                    net.Id = tamanho;
+                
+                    byte[]  ba3 = net.toByteArray();
+                    arq.writeChar(' ');
+                    arq.writeInt(ba3.length);
+                    arq.write(ba3);
+                
+                    create(net.Id, pos2 );
+                }
+
+            }
+            arq.close();
+            
 
     }
     
