@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Node {
-    boolean leaf;
+    
     int ordem;          // Número máximo de filhos que uma página pode ter
     int maxElementos;       // Variável igual a ordem - 1 para facilitar a clareza do código
     int maxFilhos;       // Variável igual a ordem para facilitar a clareza do código
