@@ -21,7 +21,8 @@ public class Netflix {
     int seasons = 0;
     String[] Listed_in = null;
     String Description = "";
-    //teste
+
+    // teste
     public Netflix(int id, String type, String name, String[] cast, Data data_added, int min, int seasons,
             String[] listed_in, String description) {
         Id = id;
@@ -49,11 +50,10 @@ public class Netflix {
     }
 
     public void printar() {
-        System.out.println("ID:" + Id);  
-        System.out.println("Type:" + Type);     
-        System.out.println("NOME:" + Name);     
-        
-        
+        System.out.println("ID:" + Id);
+        System.out.println("Type:" + Type);
+        System.out.println("NOME:" + Name);
+
         if (Cast == null) {
 
         } else {
@@ -78,40 +78,38 @@ public class Netflix {
         }
 
         System.out.println("\nDescription: " + Description);
-        
 
     }
 
-    public static void apagarRegistro(String FilePath)
-    {
-        
-            try {
-                // Crie uma instância do objeto File com o caminho e nome do arquivo
-                File arquivo = new File(FilePath);
-    
-                // Verifique se o arquivo existe antes de tentar excluir
-                if (arquivo.exists()) {
-                    // Crie uma instância do objeto RandomAccessFile
-                    RandomAccessFile raf = new RandomAccessFile(arquivo, "rw");
-    
-                    // ... faça algo com o arquivo ...
-    
-                    // Feche o objeto RandomAccessFile
-                    raf.close();
-    
-                    // Exclua o arquivo usando o método delete()
-                    if (arquivo.delete()) {
-                        System.out.println("Arquivo excluído com sucesso!");
-                    } else {
-                        System.out.println("Não foi possível excluir o arquivo.");
-                    }
+    public static void apagarRegistro(String FilePath) {
+
+        try {
+            // Crie uma instância do objeto File com o caminho e nome do arquivo
+            File arquivo = new File(FilePath);
+
+            // Verifique se o arquivo existe antes de tentar excluir
+            if (arquivo.exists()) {
+                // Crie uma instância do objeto RandomAccessFile
+                RandomAccessFile raf = new RandomAccessFile(arquivo, "rw");
+
+                // ... faça algo com o arquivo ...
+
+                // Feche o objeto RandomAccessFile
+                raf.close();
+
+                // Exclua o arquivo usando o método delete()
+                if (arquivo.delete()) {
+                    System.out.println("Arquivo excluído com sucesso!");
                 } else {
-                    System.out.println("O arquivo não existe.");
+                    System.out.println("Não foi possível excluir o arquivo.");
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } else {
+                System.out.println("O arquivo não existe.");
             }
-        
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public int getId() {
@@ -178,10 +176,9 @@ public class Netflix {
         Listed_in = listed_in;
     }
 
-    public void tamanhoListed_in(int length ) {
+    public void tamanhoListed_in(int length) {
         Listed_in = new String[length];
     }
-
 
     public String getDescription() {
         return Description;
@@ -190,7 +187,6 @@ public class Netflix {
     public void setDescription(String description) {
         Description = description;
     }
-
 
     public byte[] toByteArray() throws IOException {
 
@@ -210,7 +206,7 @@ public class Netflix {
             dos.writeInt(Cast.length);
             // System.out.println("Cast.length: " + Cast.length);
             for (int i = 0; i < Cast.length; i++) {
-               // dos.writeInt(Cast[i].length());
+                // dos.writeInt(Cast[i].length());
                 // System.out.println("Cast[i].length(): " + Cast[i].length());
                 // System.out.println("Cast[i]: " + Cast[i]);
                 dos.writeUTF(Cast[i]);
@@ -227,7 +223,7 @@ public class Netflix {
             dos.writeInt(Listed_in.length);
             // System.out.println("Listed_in.length: " + Listed_in.length);
             for (int i = 0; i < Listed_in.length; i++) {
-               // dos.writeInt(Listed_in[i].length());
+                // dos.writeInt(Listed_in[i].length());
                 // System.out.println("Listed_in[i].length(): " + Listed_in[i].length());
                 // System.out.println("Listed_in[i]: " + Listed_in[i]);
                 dos.writeUTF(Listed_in[i]);
@@ -253,27 +249,24 @@ public class Netflix {
         for (int i = 0; i < length; i++) {
             Cast[i] = dis.readUTF();
         }
-            
-              // dis.readInt();
-              Data_added.setMes(dis.readUTF());
-              // System.out.println(Data_added.getMes());
-              Data_added.setDia(dis.readInt());
-              // System.out.println(Data_added.getDia());
-              Data_added.setAno(dis.readInt());
-              // System.out.println(Data_added.getAno());
-        
+
+        // dis.readInt();
+        Data_added.setMes(dis.readUTF());
+        // System.out.println(Data_added.getMes());
+        Data_added.setDia(dis.readInt());
+        // System.out.println(Data_added.getDia());
+        Data_added.setAno(dis.readInt());
+        // System.out.println(Data_added.getAno());
+
         length = dis.readInt();
         Listed_in = new String[length];
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             Listed_in[i] = dis.readUTF();
         }
 
         Description = dis.readUTF();
     }
 
-
-
-    
     public Netflix(String str) {
 
         String[] Cast = new String[0];
@@ -494,29 +487,24 @@ public class Netflix {
         // --------------------------------Description-----------------------------
         aux = "";
         if (str.charAt(i + 1) == '\"') {
-            
+
             for (i = i + 2; str.charAt(i) != '\"'; i++) {
                 aux += str.charAt(i);
             }
         } else {
-           
-            
+
             for (i = i + 1; i < str.length(); i++) {
-                
-            
-            
-                aux = aux +  str.charAt(i);
+
+                aux = aux + str.charAt(i);
             }
-           
-            
+
         }
 
         setDescription(aux);
         // System.out.println("\nTESTE8: " + Description);
     }
 
-    static public void LerBaseDeDadosInicial(String s1, String s2, int NumRegistros) throws IOException
-    {
+    static public void LerBaseDeDadosInicial(String s1, String s2, int NumRegistros) throws IOException {
         Netflix[] net = new Netflix[NumRegistros];
         byte[] ba;
 
@@ -528,20 +516,19 @@ public class Netflix {
         bf.close();
 
         RandomAccessFile arq = new RandomAccessFile(s2, "rw");
-        
-          arq.writeInt(NumRegistros);
-          for (int i = 0; i < NumRegistros; i++) {
-          ba = net[i].toByteArray();
-          arq.writeChar(' ');
-          arq.writeInt(ba.length);
-          arq.write(ba);
-          }
 
-          arq.close();
-         
+        arq.writeInt(NumRegistros);
+        for (int i = 0; i < NumRegistros; i++) {
+            ba = net[i].toByteArray();
+            arq.writeChar(' ');
+            arq.writeInt(ba.length);
+            arq.write(ba);
+        }
+
+        arq.close();
+
     }
 
-    
     static public void TelaArvore() throws IOException {
 
         int x = 0;
@@ -556,41 +543,36 @@ public class Netflix {
             System.out.println(" 3 - Update");
             System.out.println(" 4 - Delete");
             System.out.println(" 5 - Ler base de dados incial !CUIDADO! (So use se nao tiver arquivo)");
-          
-            
-
 
             System.out.println("Entrar com uma opcao:");
-            
-            x= sc.nextInt();
+
+            x = sc.nextInt();
             System.out.println(x);
 
             switch (x) {
                 case 0:
-                    
+
                     break;
                 case 1:
                     crudA.createArv();
                     break;
                 case 2:
-                crudA.readArv();
+                    crudA.readArv();
                     break;
                 case 3:
-                crudA.updateArv();
+                    crudA.updateArv();
                     break;
                 case 4:
-                crudA.deleteARV();
+                    crudA.deleteARV();
                     break;
                 case 5:
-                
-               crudA.LerRegistroEfazerArvore("teste2.csv", "teste.db", 8807);
-                    
+
+                    crudA.LerRegistroEfazerArvore("teste2.csv", "teste.db", 8807);
+
                     break;
                 case 6:
-             
+
                     break;
-
-
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
@@ -601,14 +583,14 @@ public class Netflix {
     }
 
     static public void TelaArquiHash() throws Exception {
-        int y =0;
+        int y = 0;
         Scanner sc = new Scanner(System.in);
         System.out.println("Quantidade de elementos por cesto:");
         int numCesto = sc.nextInt();
-        HashExtensivel h = new HashExtensivel(numCesto,"BaseHash/Index.db","BaseHash/Cesto.db");
+        HashExtensivel h = new HashExtensivel(numCesto, "BaseHash/Index.db", "BaseHash/Cesto.db");
         h.LerRegistroHash("teste2.csv", "teste.db");
-        do{
-        
+        do {
+
             System.out.println("\nOpcoes ");
             System.out.println(" 0 - parar");
             System.out.println(" 1 - Creat");
@@ -617,7 +599,7 @@ public class Netflix {
             System.out.println(" 4 - Delete");
             y = sc.nextInt();
 
-            switch(y){
+            switch (y) {
                 case 1:
                     h.createHash();
                     break;
@@ -625,26 +607,26 @@ public class Netflix {
                     System.out.println("Digite a chave (ID) que voce quer mudar: ");
                     int chave1 = sc.nextInt();
                     long endereco = h.read(chave1);
-                    h.updateHash(chave1,endereco);
-                break;  
+                    h.updateHash(chave1, endereco);
+                    break;
 
                 case 3:
                     System.out.println("Digite a chave (ID) que voce quer Ler: ");
                     int chave = sc.nextInt();
                     h.readHash(chave);
-                break;   
+                    break;
 
                 case 4:
                     System.out.println("Digite a chave (ID) que voce quer deletar: ");
                     int chave2 = sc.nextInt();
-                    if(h.delete(chave2)){
+                    if (h.delete(chave2)) {
                         System.out.println("Elemente deletado com Sucesso!");
-                    }else{
+                    } else {
                         System.out.println("Elemento não deletado");
                     }
-                break;       
+                    break;
             }
-        }while(y!=0);
+        } while (y != 0);
     }
 
     static public void TelaArquiSeq() throws IOException {
@@ -666,15 +648,14 @@ public class Netflix {
             System.out.println(" 7 - Deletar Registro");
             System.out.println(" 8 - Ler tudo ");
 
-
             System.out.println("Entrar com uma opcao:");
-            
-            x= sc.nextInt();
+
+            x = sc.nextInt();
             System.out.println(x);
 
             switch (x) {
                 case 0:
-                    
+
                     break;
                 case 1:
                     c.create();
@@ -692,14 +673,14 @@ public class Netflix {
 
                     break;
                 case 3:
-                System.out.println("Qual Id deseja Update:");
-                int Num = sc.nextInt();
-                c.uptate(Num);
+                    System.out.println("Qual Id deseja Update:");
+                    int Num = sc.nextInt();
+                    c.uptate(Num);
                     break;
                 case 4:
                     System.out.println("Qual Id deseja Deletar:");
                     int Num2 = sc.nextInt();
-   
+
                     Boolean b1 = c.delete(Num2);
 
                     if (b1) {
@@ -707,25 +688,25 @@ public class Netflix {
                     } else {
                         System.out.println("n tem esse registro ou ele ja esta deletado");
                     }
-                    
+
                     break;
                 case 5:
                     ord.LoopOrdenacao();
                     break;
 
                 case 6:
-                LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
+                    LerBaseDeDadosInicial("teste2.csv", "teste.db", 8807);
                     break;
 
                 case 7:
                     System.out.println("Qual Arquivo deseja Deletar:");
                     String s1 = sc.next();
                     apagarRegistro(s1);
-                    break;   
+                    break;
 
                 case 8:
                     c.readAll();
-                    break;  
+                    break;
 
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
@@ -735,13 +716,11 @@ public class Netflix {
         sc.close();
     }
 
-    
-
     static public void TelaInicial() throws Exception {
 
         int x = 0;
-        int y =0;
-        int numCesto =0;
+        int y = 0;
+        int numCesto = 0;
         Crud c = new Crud();
         ordenacao ord = new ordenacao();
         long pos;
@@ -752,10 +731,11 @@ public class Netflix {
             System.out.println(" 1 - ArqSequencial");
             System.out.println(" 2 - Arvore");
             System.out.println(" 3 - Hash");
+            System.out.println(" 4 - Huffman");
 
             System.out.println("Entrar com uma opcao:");
-            
-            x= sc.nextInt();
+
+            x = sc.nextInt();
             System.out.println(x);
 
             switch (x) {
@@ -766,7 +746,10 @@ public class Netflix {
                     TelaArvore();
                     break;
                 case 3:
-                     TelaArquiHash();
+                    TelaArquiHash();
+                    break;
+                case 4:
+                    TelaCompressao();
                     break;
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
@@ -776,13 +759,47 @@ public class Netflix {
         sc.close();
     }
 
+    static public void TelaCompressao() throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int x = 0;
+        HuffmanCompression huff = new HuffmanCompression();
+        do {
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - para");
+            System.out.println(" 1 - Compactar");
+            System.out.println(" 2 - Descompactar");
+
+            System.out.println("Entrar com uma opcao:");
+
+            x = sc.nextInt();
+            System.out.println(x);
+
+            switch (x) {
+                case 1:
+                System.out.println("Qual arquivo deseja compactar");
+                   String s1 = sc.next();
+                   huff.comprimir1(s1);
+                    break;
+                case 2:
+                System.out.println("Qual versão deseja descompactar");
+                int k = sc.nextInt();
+                    huff.retrieveDataFromFile("testeHuffman1.db");
+                    break;
+
+                default:
+                    System.out.println("ERRO: Valor invalido:" + x);
+            }
+
+        } while (x != 0);
+
+    }
+
     public static void main(String[] args) throws Exception {
-      
+
         TelaInicial();
 
     }
 
-	public void setCast(String readUTF) {
-	}
+    public void setCast(String readUTF) {
+    }
 }
-
