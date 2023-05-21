@@ -188,7 +188,7 @@ public class HuffmanCompression {
         return decompressedData;
     }
 
-    public void retrieveDataFromFile(String filename) {
+    public void retrieveDataFromFile(String filename, int k) {
         try (DataInputStream input = new DataInputStream(new FileInputStream(filename))) {
             // Lê a quantidade de entradas da byteFrequency do arquivo
             int numEntries = input.readInt();
@@ -205,13 +205,19 @@ public class HuffmanCompression {
             byte[] compressedData = new byte[input.available()];
             input.readFully(compressedData);
 
-            // Use os dados como necessário
-            // ...
-
-            // Exemplo: descomprimir os dados
+          
+            //  descomprimir os dados
             HuffmanCompression huffman = new HuffmanCompression(byteFrequency);
             byte[] decompressedData = huffman.decompress(compressedData, byteFrequency);
-            writeDecompressedDataToFile(decompressedData, "teste3.db");
+            if (k == 1) {
+                writeDecompressedDataToFile(decompressedData, "teste.db");
+            }
+            else{
+                k  = k -1;
+                
+                writeDecompressedDataToFile(decompressedData, "testeHuffman" + String.valueOf(k) + ".db");
+            }
+            
            // System.out.println("Dados descomprimidos: " + Arrays.toString(decompressedData));
         } catch (IOException e) {
             e.printStackTrace();

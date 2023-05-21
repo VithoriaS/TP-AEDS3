@@ -542,9 +542,9 @@ public class Netflix {
         RandomAccessFile saida = new RandomAccessFile("saidaFinal.db", "rw");
         byte[] decompress = LZW.descompresao(input_data);
         saida.write(decompress);
-            
+
     }
-    
+
     private static long LZWCom() throws IOException {
         long tam;
         RandomAccessFile entrada = new RandomAccessFile("teste3.db", "r");
@@ -553,11 +553,9 @@ public class Netflix {
         RandomAccessFile saida = new RandomAccessFile("saida.db", "rw");
         saida.write(LZW.compressao(input_data));
         tam = saida.length();
-            
-        
+
         return tam;
     }
-    
 
     static public void TelaArvore() throws IOException {
 
@@ -764,7 +762,6 @@ public class Netflix {
             System.out.println(" 4 - Huffman");
             System.out.println(" 5 - LZW");
 
-
             System.out.println("Entrar com uma opcao:");
 
             x = sc.nextInt();
@@ -811,17 +808,17 @@ public class Netflix {
 
             switch (x) {
                 case 1:
-                System.out.println("Qual arquivo deseja compactar");
-                   String s1 = sc.next();
-                   huff.comprimir1(s1);
+                    System.out.println("Qual arquivo deseja compactar");
+                    String s1 = sc.next();
+                    huff.comprimir1(s1);
                     break;
                 case 2:
-                System.out.println("Qual versão deseja descompactar");
-                int k = sc.nextInt();
-                String aux1 = "testeHuffman";
-                aux1 = aux1 + String.valueOf(k);
-                aux1 = aux1 + ".db";
-                    huff.retrieveDataFromFile(aux1);
+                    System.out.println("Qual versão deseja descompactar");
+                    int k = sc.nextInt();
+                    String aux1 = "testeHuffman";
+                    aux1 = aux1 + String.valueOf(k);
+                    aux1 = aux1 + ".db";
+                    huff.retrieveDataFromFile(aux1, k);
                     break;
 
                 default:
@@ -832,11 +829,10 @@ public class Netflix {
 
     }
 
-    
     static public void TelaCompressaoLZW() throws Exception {
         Scanner sc = new Scanner(System.in);
         int x = 0;
-       /// HuffmanCompression huff = new HuffmanCompression();
+        /// HuffmanCompression huff = new HuffmanCompression();
         do {
             System.out.println("\nOpcoes ");
             System.out.println(" 0 - para");
@@ -850,11 +846,11 @@ public class Netflix {
 
             switch (x) {
                 case 1:
-                   LZWCom();
+                    LZWCom();
                     break;
                 case 2:
-                   LZWDes();
-                   
+                    LZWDes();
+
                     break;
 
                 default:
