@@ -262,9 +262,7 @@ public class HuffmanCompression {
        // this.root = compressor.root;
 
         byte[] compressedData = compressor.compress(fileBytes);
-        RandomAccessFile raf = new RandomAccessFile(fileName, "rw"); 
-        long tamanho = raf.length();
-        raf.close();
+        
 
         String s2 = "";
         String s3 = "";
@@ -298,13 +296,8 @@ public class HuffmanCompression {
 
         compressor.storeDataInFile(compressedData, byteFrequency, fileName);
 
-        RandomAccessFile raf1 = new RandomAccessFile(fileName, "rw"); 
-        long tamanho1 = raf1.length();
-        raf1.close();
+   
 
-        long tempoFinal = System.currentTimeMillis();
-
-        long tempoTotal = tempoFinal - tempoInicial;
     }
 
       public static void main(String[] args) throws IOException {

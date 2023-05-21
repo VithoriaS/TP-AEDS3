@@ -536,7 +536,7 @@ public class Netflix {
     }
 
     private static void LZWDes() throws IOException {
-        RandomAccessFile entrada = new RandomAccessFile("teste3.db", "r");
+        RandomAccessFile entrada = new RandomAccessFile("teste.db", "r");
         byte[] input_data = new byte[(int) entrada.length()];
         entrada.readFully(input_data);
         RandomAccessFile saida = new RandomAccessFile("saidaFinal.db", "rw");
@@ -547,7 +547,7 @@ public class Netflix {
 
     private static long LZWCom() throws IOException {
         long tam;
-        RandomAccessFile entrada = new RandomAccessFile("teste3.db", "r");
+        RandomAccessFile entrada = new RandomAccessFile("teste.db", "r");
         byte[] input_data = new byte[(int) entrada.length()];
         entrada.readFully(input_data);
         RandomAccessFile saida = new RandomAccessFile("saida.db", "rw");
@@ -762,7 +762,7 @@ public class Netflix {
             System.out.println(" 4 - Huffman");
             System.out.println(" 5 - LZW");
             System.out.println(" 6 - LZW e Huffman juntos (Compressão)");
-            System.out.println(" 6 - LZW e Huffman juntos (Descompressão)");
+            System.out.println(" 7 - LZW e Huffman juntos (Descompressão)");
 
             System.out.println("Entrar com uma opcao:");
 
@@ -787,15 +787,40 @@ public class Netflix {
                     break;
                 case 6:
                     compresao();
-                    break; 
+                    x = 0;
+                    break;
                 case 7:
                     descompresao();
-                    break;       
+                    x = 0;
+                    break;
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
             }
 
         } while (x != 0);
+        sc.close();
+    }
+
+    static public void HuffCompres() throws IOException {
+        Scanner sc = new Scanner(System.in);
+        HuffmanCompression huff = new HuffmanCompression();
+        System.out.println("Qual arquivo deseja compactar");
+        String s1 = sc.next();
+        huff.comprimir1(s1);
+      
+        sc.close();
+
+    }
+
+    static public void HuffDecompres() {
+        Scanner sc = new Scanner(System.in);
+        HuffmanCompression huff = new HuffmanCompression();
+        System.out.println("Qual versão deseja descompactar");
+        int k = sc.nextInt();
+        String aux1 = "testeHuffman";
+        aux1 = aux1 + String.valueOf(k);
+        aux1 = aux1 + ".db";
+        huff.retrieveDataFromFile(aux1, k);
         sc.close();
     }
 
@@ -837,43 +862,114 @@ public class Netflix {
 
     }
 
-
     private static void compresao() throws IOException {
+        // huff
         long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
-        // HuffmanCompression();
-         tempoHuffman = System.currentTimeMillis() - start;
-         LZWCom();
-         tempoLZW = System.currentTimeMillis() - start - tempoHuffman;
- 
-         System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
-         System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
- 
-         if (tempoHuffman > tempoLZW) {
-             System.out.println("O LZW foi mais rápido");
-         } else {
-             System.out.println("O Huffman foi mais rápido");
-         }
-    }
+        HuffCompres();
+        RandomAccessFile raf1 = new RandomAccessFile("teste.db", "rw"); 
+        long tamanho1 = raf1.length();
+        
+        raf1.close();
 
+        RandomAccessFile raf2 = new RandomAccessFile("testeHuffman1.db", "rw"); 
+        long tamanho2 = raf2.length();
+        
+        raf2.close();
 
-    private static void descompresao() throws IOException {
-        long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
-       // HuffmanCompression();
+        float tamanhoHuffman = (float)tamanho2/ (float)tamanho1 ;
+
         tempoHuffman = System.currentTimeMillis() - start;
-        LZWDes();
-        tempoLZW = System.currentTimeMillis() - start - tempoHuffman;
 
-        System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
-        System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
+        // lzw
+        LZWCom();
+        RandomAccessFile raf3 = new RandomAccessFile("teste.db", "rw"); 
+        long tamanho3 = raf3.length();
+        raf3.close();
+
+        RandomAccessFile raf4 = new RandomAccessFile("saida.db", "rw"); 
+        long tamanho4 = raf4.length();
+        raf4.close();
+
+        float tamanhoLZW = (float)tamanho4/(float) tamanho3 ;
+
+        tempoLZW = System.currentTimeMillis()  - tempoHuffman;
+        
+
+
+        // comparacao tempo 
+        System.out.println("Tempo de compressão do Huffman: " + tempoHuffman + "ms");
+        System.out.println("Tempo de compressão do LZW: " + tempoLZW + "ms");
 
         if (tempoHuffman > tempoLZW) {
             System.out.println("O LZW foi mais rápido");
         } else {
             System.out.println("O Huffman foi mais rápido");
         }
+
+        // comparacao tamanho
+        System.out.println("Porcentagem de tamanho Huffman: " + tamanhoHuffman + "%");
+        System.out.println("Porcentagem de tamanho LZW: " + tamanhoLZW + "%");
+
+        if (tamanhoHuffman < tamanhoLZW) {
+            System.out.println("O Huffman foi mais eficiente");
+        } else {
+            System.out.println("O LWZ foi mais eficiente");
+        }
+        
     }
 
-    
+    private static void descompresao() throws IOException {
+          // huff
+          long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
+          HuffDecompres();
+          RandomAccessFile raf1 = new RandomAccessFile("testeHuffman1.db", "rw"); 
+          long tamanho1 = raf1.length();
+          raf1.close();
+  
+          RandomAccessFile raf2 = new RandomAccessFile("teste.db", "rw"); 
+          long tamanho2 = raf2.length();
+          raf2.close();
+
+          float tamanhoHuffman = (float)tamanho2/ (float)tamanho1 ;
+  
+          tempoHuffman = System.currentTimeMillis() - start;
+  
+          // lzw
+          LZWDes();
+          RandomAccessFile raf3 = new RandomAccessFile("saida.db", "rw"); 
+          long tamanho3 = raf3.length();
+          raf3.close();
+  
+          RandomAccessFile raf4 = new RandomAccessFile("teste.db", "rw"); 
+          long tamanho4 = raf4.length();
+          raf4.close();
+  
+          float tamanhoLZW = (float)tamanho4/(float) tamanho3 ;
+  
+          tempoLZW = System.currentTimeMillis()  - tempoHuffman;
+          
+  
+  
+          // comparacao tempo 
+          System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
+          System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
+  
+          if (tempoHuffman > tempoLZW) {
+              System.out.println("O LZW foi mais rápido");
+          } else {
+              System.out.println("O Huffman foi mais rápido");
+          }
+  
+          // comparacao tamanho
+          System.out.println("Porcentagem de tamanho Huffman: " + tamanhoHuffman + "%");
+          System.out.println("Porcentagem de tamanho LZW: " + tamanhoLZW + "%");
+  
+          if (tamanhoHuffman < tamanhoLZW) {
+              System.out.println("O Huffman foi mais eficiente");
+          } else {
+              System.out.println("O LWZ foi mais eficiente");
+          }
+    }
 
     static public void TelaCompressaoLZW() throws Exception {
         Scanner sc = new Scanner(System.in);
