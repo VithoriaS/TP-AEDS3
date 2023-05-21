@@ -38,15 +38,15 @@ public class LZW {
 
 
         for (char c : des.toCharArray()) {
-            String w = prefixo + c;
+            String str = prefixo + c;
 
-            if (dicionario.containsKey(w)){
-                prefixo = w;
+            if (dicionario.containsKey(str)){
+                prefixo = str;
             }else {
                 // Adicionando o índice da palavra no dicionário ao resultado
                 resultado.add(dicionario.get(prefixo));
                 // Adicionando a nova palavra ao dicionário
-                dicionario.put(w, dicionario.size());
+                dicionario.put(str, dicionario.size());
                 prefixo = String.valueOf(c);
             }
         }
@@ -83,27 +83,27 @@ public class LZW {
      * @return String descomprimida.
      */
     public static String descompresao(int[] comprimido) {
-        // Construindo o dicionário inicial
         List<String> dicionario = builddicionarioList();
         int tamDicionario = dicionario.size();
-        String w = String.valueOf((char) comprimido[0]);
-        StringBuilder resultado = new StringBuilder(w);
+        StringBuilder resultado = new StringBuilder();
+        String str = String.valueOf((char) comprimido[0]);
+        resultado.append(str);
 
         for (int k = 1; k < comprimido.length; k++) {
             int entrada = comprimido[k];
             String string;
-            if (entrada < tamDicionario){
+            if (entrada == tamDicionario){
+                string = str + str.charAt(0);
+            }else if (entrada < tamDicionario){
                 string = dicionario.get(entrada);
-            }else if (entrada == tamDicionario){
-                string = w + w.charAt(0);
             }else throw new IllegalArgumentException("Erro na compresao");
 
             // Concatenando a entrada atual à string resultante
             resultado.append(string);
             // Adicionando uma nova entrada ao dicionário
-            dicionario.add(w + string.charAt(0));
+            dicionario.add(str + string.charAt(0));
             tamDicionario++;
-            w = string;
+            str = string;
         }
         return resultado.toString();
     }
