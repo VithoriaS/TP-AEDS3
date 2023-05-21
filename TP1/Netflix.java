@@ -7,10 +7,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Netflix {
+    public static String db_path = "teste.db";
+    public static String tree_path = "aeds3/src/main/java/tmp/btree.idx";
+    public static String hash_path = "aeds3/src/main/java/tmp/hash.idx";
+    public static String listaTitle_path = "aeds3/src/main/java/tmp/listaTitlePath.idx";
+    public static String listaDirectors_path = "aeds3/src/main/java/tmp/listaDirectorsPath.idx";
     char lapide;
     int Id = 0;
     String Type = "";
@@ -529,6 +535,30 @@ public class Netflix {
 
     }
 
+    private static void LZWDes() throws IOException {
+        RandomAccessFile entrada = new RandomAccessFile("teste3.db", "r");
+        byte[] input_data = new byte[(int) entrada.length()];
+        entrada.readFully(input_data);
+        RandomAccessFile saida = new RandomAccessFile("saidaFinal.db", "rw");
+        byte[] decompress = LZW.descompresao(input_data);
+        saida.write(decompress);
+            
+    }
+    
+    private static long LZWCom() throws IOException {
+        long tam;
+        RandomAccessFile entrada = new RandomAccessFile("teste3.db", "r");
+        byte[] input_data = new byte[(int) entrada.length()];
+        entrada.readFully(input_data);
+        RandomAccessFile saida = new RandomAccessFile("saida.db", "rw");
+        saida.write(LZW.compressao(input_data));
+        tam = saida.length();
+            
+        
+        return tam;
+    }
+    
+
     static public void TelaArvore() throws IOException {
 
         int x = 0;
@@ -732,6 +762,8 @@ public class Netflix {
             System.out.println(" 2 - Arvore");
             System.out.println(" 3 - Hash");
             System.out.println(" 4 - Huffman");
+            System.out.println(" 5 - LZW");
+
 
             System.out.println("Entrar com uma opcao:");
 
@@ -750,6 +782,9 @@ public class Netflix {
                     break;
                 case 4:
                     TelaCompressao();
+                    break;
+                case 5:
+                    TelaCompressaoLZW();
                     break;
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
@@ -784,6 +819,39 @@ public class Netflix {
                 System.out.println("Qual versão deseja descompactar");
                 int k = sc.nextInt();
                     huff.retrieveDataFromFile("testeHuffman1.db");
+                    break;
+
+                default:
+                    System.out.println("ERRO: Valor invalido:" + x);
+            }
+
+        } while (x != 0);
+
+    }
+
+    
+    static public void TelaCompressaoLZW() throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int x = 0;
+       /// HuffmanCompression huff = new HuffmanCompression();
+        do {
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - para");
+            System.out.println(" 1 - Compactar");
+            System.out.println(" 2 - Descompactar");
+
+            System.out.println("Entrar com uma opcao:");
+
+            x = sc.nextInt();
+            System.out.println(x);
+
+            switch (x) {
+                case 1:
+                   LZWCom();
+                    break;
+                case 2:
+                   LZWDes();
+                   
                     break;
 
                 default:
