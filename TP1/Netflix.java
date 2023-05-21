@@ -763,6 +763,8 @@ public class Netflix {
             System.out.println(" 3 - Hash");
             System.out.println(" 4 - Huffman");
             System.out.println(" 5 - LZW");
+            System.out.println(" 6 - LZW e Huffman juntos (Compressão)");
+            System.out.println(" 6 - LZW e Huffman juntos (Descompressão)");
 
 
             System.out.println("Entrar com uma opcao:");
@@ -786,6 +788,12 @@ public class Netflix {
                 case 5:
                     TelaCompressaoLZW();
                     break;
+                case 6:
+                    compresao();
+                    break; 
+                case 7:
+                    descompresao();
+                    break;       
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
             }
@@ -827,6 +835,41 @@ public class Netflix {
 
         } while (x != 0);
 
+    }
+
+    private static void compresao() throws IOException {
+        long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
+        // HuffmanCompression();
+         tempoHuffman = System.currentTimeMillis() - start;
+         LZWCom();
+         tempoLZW = System.currentTimeMillis() - start - tempoHuffman;
+ 
+         System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
+         System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
+ 
+         if (tempoHuffman > tempoLZW) {
+             System.out.println("O LZW foi mais rápido");
+         } else {
+             System.out.println("O Huffman foi mais rápido");
+         }
+    }
+
+
+    private static void descompresao() throws IOException {
+        long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
+       // HuffmanCompression();
+        tempoHuffman = System.currentTimeMillis() - start;
+        LZWDes();
+        tempoLZW = System.currentTimeMillis() - start - tempoHuffman;
+
+        System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
+        System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
+
+        if (tempoHuffman > tempoLZW) {
+            System.out.println("O LZW foi mais rápido");
+        } else {
+            System.out.println("O Huffman foi mais rápido");
+        }
     }
 
     
