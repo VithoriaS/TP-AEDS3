@@ -783,7 +783,10 @@ public class Netflix {
                 case 2:
                 System.out.println("Qual versão deseja descompactar");
                 int k = sc.nextInt();
-                    huff.retrieveDataFromFile("testeHuffman1.db");
+                String aux1 = "testeHuffman";
+                aux1 = aux1 + String.valueOf(k);
+                aux1 = aux1 + ".db";
+                    huff.retrieveDataFromFile(aux1);
                     break;
 
                 default:
