@@ -744,6 +744,75 @@ public class Netflix {
         sc.close();
     }
 
+    static public void TelaCasamentoDepadrao() throws IOException
+    {
+        KMPAlgorithm kmp = new KMPAlgorithm();
+        int x = 0;
+        
+        Scanner sc = new Scanner(System.in);
+        do {
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - para");
+            System.out.println(" 1 - KMP");
+            System.out.println(" 2 - ALGvic");
+            System.out.println(" 3 - Comparacao Algoritomos");
+            
+
+            System.out.println("Entrar com uma opcao:");
+
+            x = sc.nextInt();
+            System.out.println(x);
+
+            switch (x) {
+                case 0:
+
+                    break;
+                case 1:
+                
+                Scanner	sc1 = new Scanner(System.in);
+                System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
+                String s1 = sc.nextLine();
+                    kmp.kmp(s1);
+                sc1.close();
+                    break;
+                case 2:
+                Scanner	sc2 = new Scanner(System.in);
+                System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
+                String s2 = sc.nextLine();
+                   // vics alg
+                sc2.close();
+                    break;
+                case 3:
+                Scanner	sc3 = new Scanner(System.in);
+                System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
+                String s3 = sc.nextLine();
+                long tempoKmp, tempoVic, start = 0;
+                start = System.currentTimeMillis();
+                    kmp.kmp(s3);
+                    tempoKmp = System.currentTimeMillis();
+                    tempoKmp = tempoKmp - start;
+
+                    start = System.currentTimeMillis();
+                    // vics alg
+                    tempoVic = System.currentTimeMillis();
+                    tempoVic = tempoVic - start;
+                    
+                sc3.close();
+                    
+                int comparacaoKmp = kmp.comparacoes;
+                // compara ai vics
+                
+
+                    break;
+
+                default:
+                    System.out.println("ERRO: Valor invalido:" + x);
+            }
+
+        } while (x != 0);
+        sc.close();
+    }
+
     static public void TelaInicial() throws Exception {
 
         int x = 0;
@@ -763,6 +832,7 @@ public class Netflix {
             System.out.println(" 5 - LZW");
             System.out.println(" 6 - LZW e Huffman juntos (Compressão)");
             System.out.println(" 7 - LZW e Huffman juntos (Descompressão)");
+            System.out.println("8 - KMP e vicsALg");
 
             System.out.println("Entrar com uma opcao:");
 
@@ -793,6 +863,9 @@ public class Netflix {
                     descompresao();
                     x = 0;
                     break;
+                case 8:
+                TelaCasamentoDepadrao();
+                break;
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
             }
