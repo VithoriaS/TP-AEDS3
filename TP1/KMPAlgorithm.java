@@ -27,13 +27,19 @@ public class KMPAlgorithm {
                 textIndex++;
             }
             if (patternIndex == pattern.length) {
-                System.out.println("Pattern found at index " + (textIndex - patternIndex));
+                comparacoes++;
+                System.out.println("Padrão Achado " + (textIndex - patternIndex));
                 patternIndex = lps[patternIndex - 1];
             } else if (textIndex < text.length && pattern[patternIndex] != text[textIndex]) {
                 if (patternIndex != 0)
+                {
+                    comparacoes++;
                     patternIndex = lps[patternIndex - 1];
+                }  
                 else
+                {
                     textIndex++;
+                }
             }
         }
  

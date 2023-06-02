@@ -760,7 +760,7 @@ public class Netflix {
 
             System.out.println("Entrar com uma opcao:");
 
-            x = sc.nextInt();
+            x = sc.nextInt();   // ta dando lixo aqui vics
             System.out.println(x);
 
             switch (x) {
@@ -771,8 +771,9 @@ public class Netflix {
                 
                 Scanner	sc1 = new Scanner(System.in);
                 System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
-                String s1 = sc.nextLine();
-                    kmp.kmp(s1);
+                String s1 = sc1.nextLine();
+
+                kmp.kmp(s1);
                 sc1.close();
                     break;
                 case 2:
