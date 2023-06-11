@@ -775,6 +775,7 @@ public class Netflix {
 
                 kmp.kmp(s1);
                 sc1.close();
+             
                     break;
                 case 2:
                 Scanner	sc2 = new Scanner(System.in);
