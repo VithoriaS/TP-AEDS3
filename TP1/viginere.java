@@ -8,58 +8,62 @@ public class viginere {
 
      private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+      // Método para criptografar um array de bytes usando o algoritmo de Vigenère
     public static byte[] encrypt(byte[] plaintext, byte[] key) {
         byte[] ciphertext = new byte[plaintext.length];
 
         int keyIndex = 0;
         for (int i = 0; i < plaintext.length; i++) {
             byte plainByte = plaintext[i];
-            if (Character.isLetter(plainByte)) {
-                boolean isUpperCase = Character.isUpperCase(plainByte);
+            if (Character.isLetter(plainByte)) { // Verifica se o byte é uma letra
+                boolean isUpperCase = Character.isUpperCase(plainByte); // Verifica se a letra é maiúscula
+
                 byte keyByte = key[keyIndex];
-                int plainIndex = ALPHABET.indexOf(Character.toUpperCase(plainByte));
-                int keyCharIndex = ALPHABET.indexOf(Character.toUpperCase((char) keyByte));
-                int cipherIndex = (plainIndex + keyCharIndex) % ALPHABET.length();
-                char cipherChar = ALPHABET.charAt(cipherIndex);
+                int plainIndex = ALPHABET.indexOf(Character.toUpperCase(plainByte)); // Obtém o índice da letra no alfabeto
+                int keyCharIndex = ALPHABET.indexOf(Character.toUpperCase((char) keyByte)); // Obtém o índice da letra da chave no alfabeto
+                int cipherIndex = (plainIndex + keyCharIndex) % ALPHABET.length(); // Calcula o índice da letra cifrada
+                char cipherChar = ALPHABET.charAt(cipherIndex); // Obtém a letra cifrada
 
                 if (!isUpperCase) {
-                    cipherChar = Character.toLowerCase(cipherChar);
+                    cipherChar = Character.toLowerCase(cipherChar); // Mantém a letra em minúsculo se a original era minúscula
                 }
 
-                ciphertext[i] = (byte) cipherChar;
+                ciphertext[i] = (byte) cipherChar; // Armazena a letra cifrada no array de bytes
 
-                keyIndex = (keyIndex + 1) % key.length;
+                keyIndex = (keyIndex + 1) % key.length; // Atualiza o índice da chave para o próximo caractere
             } else {
-                ciphertext[i] = plainByte;
+                ciphertext[i] = plainByte; // Se não for uma letra, mantém o byte original
             }
         }
 
         return ciphertext;
     }
 
+    // Método para descriptografar um array de bytes cifrado usando o algoritmo de Vigenère
     public static byte[] decrypt(byte[] ciphertext, byte[] key) {
         byte[] plaintext = new byte[ciphertext.length];
 
         int keyIndex = 0;
         for (int i = 0; i < ciphertext.length; i++) {
             byte cipherByte = ciphertext[i];
-            if (Character.isLetter(cipherByte)) {
-                boolean isUpperCase = Character.isUpperCase(cipherByte);
+            if (Character.isLetter(cipherByte)) { // Verifica se o byte é uma letra
+                boolean isUpperCase = Character.isUpperCase(cipherByte); // Verifica se a letra é maiúscula
+
                 byte keyByte = key[keyIndex];
-                int cipherIndex = ALPHABET.indexOf(Character.toUpperCase(cipherByte));
-                int keyCharIndex = ALPHABET.indexOf(Character.toUpperCase((char) keyByte));
-                int plainIndex = (cipherIndex - keyCharIndex + ALPHABET.length()) % ALPHABET.length();
-                char plainChar = ALPHABET.charAt(plainIndex);
+                int cipherIndex = ALPHABET.indexOf(Character.toUpperCase(cipherByte)); // Obtém o índice da letra cifrada no alfabeto
+                int keyCharIndex = ALPHABET.indexOf(Character.toUpperCase((char) keyByte)); // Obtém o índice da letra da chave no alfabeto
+                int plainIndex = (cipherIndex - keyCharIndex + ALPHABET.length()) % ALPHABET.length(); // Calcula o índice da letra decifrada
+                char plainChar = ALPHABET.charAt(plainIndex); // Obtém a letra decifrada
 
                 if (!isUpperCase) {
-                    plainChar = Character.toLowerCase(plainChar);
+                    plainChar = Character.toLowerCase(plainChar); // Mantém a letra em minúsculo se a original era minúscula
                 }
 
-                plaintext[i] = (byte) plainChar;
+                plaintext[i] = (byte) plainChar; // Armazena a letra decifrada no array de bytes
 
-                keyIndex = (keyIndex + 1) % key.length;
+                keyIndex = (keyIndex + 1) % key.length; // Atualiza o índice da chave para o próximo caractere
             } else {
-                plaintext[i] = cipherByte;
+                plaintext[i] = cipherByte; // Se não for uma letra, mantém o byte original
             }
         }
 
