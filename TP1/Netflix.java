@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -744,11 +745,10 @@ public class Netflix {
         sc.close();
     }
 
-    static public void TelaCasamentoDepadrao() throws IOException
-    {
+    static public void TelaCasamentoDepadrao() throws IOException {
         KMPAlgorithm kmp = new KMPAlgorithm();
         int x = 0;
-        
+
         Scanner sc = new Scanner(System.in);
         do {
             System.out.println("\nOpcoes ");
@@ -756,11 +756,10 @@ public class Netflix {
             System.out.println(" 1 - KMP");
             System.out.println(" 2 - ALGvic");
             System.out.println(" 3 - Comparacao Algoritomos");
-            
 
             System.out.println("Entrar com uma opcao:");
 
-            x = sc.nextInt();   // ta dando lixo aqui vics
+            x = sc.nextInt(); // ta dando lixo aqui vics
             System.out.println(x);
 
             switch (x) {
@@ -768,28 +767,28 @@ public class Netflix {
 
                     break;
                 case 1:
-                
-                Scanner	sc1 = new Scanner(System.in);
-                System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
-                String s1 = sc1.nextLine();
 
-                kmp.kmp(s1);
-                sc1.close();
-             
+                    Scanner sc1 = new Scanner(System.in);
+                    System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
+                    String s1 = sc1.nextLine();
+
+                    kmp.kmp(s1);
+                    sc1.close();
+
                     break;
                 case 2:
-                Scanner	sc2 = new Scanner(System.in);
-                System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
-                String s2 = sc.nextLine();
-                   // vics alg
-                sc2.close();
+                    Scanner sc2 = new Scanner(System.in);
+                    System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
+                    String s2 = sc.nextLine();
+                    // vics alg
+                    sc2.close();
                     break;
                 case 3:
-                Scanner	sc3 = new Scanner(System.in);
-                System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
-                String s3 = sc.nextLine();
-                long tempoKmp, tempoVic, start = 0;
-                start = System.currentTimeMillis();
+                    Scanner sc3 = new Scanner(System.in);
+                    System.out.println("Qual Padrão deseja buscar (Apenas Strings):");
+                    String s3 = sc.nextLine();
+                    long tempoKmp, tempoVic, start = 0;
+                    start = System.currentTimeMillis();
                     kmp.kmp(s3);
                     tempoKmp = System.currentTimeMillis();
                     tempoKmp = tempoKmp - start;
@@ -798,12 +797,11 @@ public class Netflix {
                     // vics alg
                     tempoVic = System.currentTimeMillis();
                     tempoVic = tempoVic - start;
-                    
-                sc3.close();
-                    
-                int comparacaoKmp = kmp.comparacoes;
-                // compara ai vics
-                
+
+                    sc3.close();
+
+                    int comparacaoKmp = kmp.comparacoes;
+                    // compara ai vics
 
                     break;
 
@@ -834,7 +832,8 @@ public class Netflix {
             System.out.println(" 5 - LZW");
             System.out.println(" 6 - LZW e Huffman juntos (Compressão)");
             System.out.println(" 7 - LZW e Huffman juntos (Descompressão)");
-            System.out.println("8 - KMP e vicsALg");
+            System.out.println(" 8 - KMP e vicsALg");
+            System.out.println(" 9 - Criptografia");
 
             System.out.println("Entrar com uma opcao:");
 
@@ -866,8 +865,11 @@ public class Netflix {
                     x = 0;
                     break;
                 case 8:
-                TelaCasamentoDepadrao();
-                break;
+                    TelaCasamentoDepadrao();
+                    break;
+                case 9:
+                    TelaCripitografia();
+                    break;
                 default:
                     System.out.println("ERRO: Valor invalido:" + x);
             }
@@ -882,7 +884,7 @@ public class Netflix {
         System.out.println("Qual arquivo deseja compactar");
         String s1 = sc.next();
         huff.comprimir1(s1);
-      
+
         sc.close();
 
     }
@@ -941,37 +943,35 @@ public class Netflix {
         // huff
         long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
         HuffCompres();
-        RandomAccessFile raf1 = new RandomAccessFile("teste.db", "rw"); 
+        RandomAccessFile raf1 = new RandomAccessFile("teste.db", "rw");
         long tamanho1 = raf1.length();
-        
+
         raf1.close();
 
-        RandomAccessFile raf2 = new RandomAccessFile("testeHuffman1.db", "rw"); 
+        RandomAccessFile raf2 = new RandomAccessFile("testeHuffman1.db", "rw");
         long tamanho2 = raf2.length();
-        
+
         raf2.close();
 
-        float tamanhoHuffman = (float)tamanho2/ (float)tamanho1 ;
+        float tamanhoHuffman = (float) tamanho2 / (float) tamanho1;
 
         tempoHuffman = System.currentTimeMillis() - start;
 
         // lzw
         LZWCom();
-        RandomAccessFile raf3 = new RandomAccessFile("teste.db", "rw"); 
+        RandomAccessFile raf3 = new RandomAccessFile("teste.db", "rw");
         long tamanho3 = raf3.length();
         raf3.close();
 
-        RandomAccessFile raf4 = new RandomAccessFile("saida.db", "rw"); 
+        RandomAccessFile raf4 = new RandomAccessFile("saida.db", "rw");
         long tamanho4 = raf4.length();
         raf4.close();
 
-        float tamanhoLZW = (float)tamanho4/(float) tamanho3 ;
+        float tamanhoLZW = (float) tamanho4 / (float) tamanho3;
 
-        tempoLZW = System.currentTimeMillis()  - tempoHuffman;
-        
+        tempoLZW = System.currentTimeMillis() - tempoHuffman;
 
-
-        // comparacao tempo 
+        // comparacao tempo
         System.out.println("Tempo de compressão do Huffman: " + tempoHuffman + "ms");
         System.out.println("Tempo de compressão do LZW: " + tempoLZW + "ms");
 
@@ -990,60 +990,58 @@ public class Netflix {
         } else {
             System.out.println("O LWZ foi mais eficiente");
         }
-        
+
     }
 
     private static void descompresao() throws IOException {
-          // huff
-          long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
-          HuffDecompres();
-          RandomAccessFile raf1 = new RandomAccessFile("testeHuffman1.db", "rw"); 
-          long tamanho1 = raf1.length();
-          raf1.close();
-  
-          RandomAccessFile raf2 = new RandomAccessFile("teste.db", "rw"); 
-          long tamanho2 = raf2.length();
-          raf2.close();
+        // huff
+        long tempoHuffman, tempoLZW, start = System.currentTimeMillis();
+        HuffDecompres();
+        RandomAccessFile raf1 = new RandomAccessFile("testeHuffman1.db", "rw");
+        long tamanho1 = raf1.length();
+        raf1.close();
 
-          float tamanhoHuffman = (float)tamanho2/ (float)tamanho1 ;
-  
-          tempoHuffman = System.currentTimeMillis() - start;
-  
-          // lzw
-          LZWDes();
-          RandomAccessFile raf3 = new RandomAccessFile("saida.db", "rw"); 
-          long tamanho3 = raf3.length();
-          raf3.close();
-  
-          RandomAccessFile raf4 = new RandomAccessFile("teste.db", "rw"); 
-          long tamanho4 = raf4.length();
-          raf4.close();
-  
-          float tamanhoLZW = (float)tamanho4/(float) tamanho3 ;
-  
-          tempoLZW = System.currentTimeMillis()  - tempoHuffman;
-          
-  
-  
-          // comparacao tempo 
-          System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
-          System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
-  
-          if (tempoHuffman > tempoLZW) {
-              System.out.println("O LZW foi mais rápido");
-          } else {
-              System.out.println("O Huffman foi mais rápido");
-          }
-  
-          // comparacao tamanho
-          System.out.println("Porcentagem de tamanho Huffman: " + tamanhoHuffman + "%");
-          System.out.println("Porcentagem de tamanho LZW: " + tamanhoLZW + "%");
-  
-          if (tamanhoHuffman < tamanhoLZW) {
-              System.out.println("O Huffman foi mais eficiente");
-          } else {
-              System.out.println("O LWZ foi mais eficiente");
-          }
+        RandomAccessFile raf2 = new RandomAccessFile("teste.db", "rw");
+        long tamanho2 = raf2.length();
+        raf2.close();
+
+        float tamanhoHuffman = (float) tamanho2 / (float) tamanho1;
+
+        tempoHuffman = System.currentTimeMillis() - start;
+
+        // lzw
+        LZWDes();
+        RandomAccessFile raf3 = new RandomAccessFile("saida.db", "rw");
+        long tamanho3 = raf3.length();
+        raf3.close();
+
+        RandomAccessFile raf4 = new RandomAccessFile("teste.db", "rw");
+        long tamanho4 = raf4.length();
+        raf4.close();
+
+        float tamanhoLZW = (float) tamanho4 / (float) tamanho3;
+
+        tempoLZW = System.currentTimeMillis() - tempoHuffman;
+
+        // comparacao tempo
+        System.out.println("Tempo de descompressão do Huffman: " + tempoHuffman + "ms");
+        System.out.println("Tempo de descompressão do LZW: " + tempoLZW + "ms");
+
+        if (tempoHuffman > tempoLZW) {
+            System.out.println("O LZW foi mais rápido");
+        } else {
+            System.out.println("O Huffman foi mais rápido");
+        }
+
+        // comparacao tamanho
+        System.out.println("Porcentagem de tamanho Huffman: " + tamanhoHuffman + "%");
+        System.out.println("Porcentagem de tamanho LZW: " + tamanhoLZW + "%");
+
+        if (tamanhoHuffman < tamanhoLZW) {
+            System.out.println("O Huffman foi mais eficiente");
+        } else {
+            System.out.println("O LWZ foi mais eficiente");
+        }
     }
 
     static public void TelaCompressaoLZW() throws Exception {
@@ -1068,6 +1066,51 @@ public class Netflix {
                 case 2:
                     LZWDes();
 
+                    break;
+
+                default:
+                    System.out.println("ERRO: Valor invalido:" + x);
+            }
+
+        } while (x != 0);
+
+    }
+
+    static public void TelaCripitografia() throws IOException {
+        Scanner sc = new Scanner(System.in);
+        int x = 0;
+        viginere vig = new viginere();
+        /// HuffmanCompression huff = new HuffmanCompression();
+        do {
+            System.out.println("\nOpcoes ");
+            System.out.println(" 0 - para");
+            System.out.println(" 1 - vegenere criptografar");
+            System.out.println(" 2 - vegenere decriptografar");
+
+            System.out.println("Entrar com uma opcao:");
+
+            x = sc.nextInt();
+            System.out.println(x);
+
+            switch (x) {
+                case 1:
+
+                    byte[] encryptedText = vig.readFileToByteArray("teste.db");
+                    byte[] key = "KEY".getBytes();
+                    byte[] emcryptedText = viginere.encrypt(encryptedText, key);
+                     FileOutputStream fos = new FileOutputStream("criptografado.db");
+                         fos.write(emcryptedText );
+                     fos.close();
+                    break;
+                case 2:
+
+                   byte[] decripitado = vig.readFileToByteArray("criptografado.db");
+                    byte[] chave = "KEY".getBytes();
+
+                    byte[] decryptedText = viginere.decrypt(decripitado, chave);
+                     FileOutputStream fos1 = new FileOutputStream("teste.db");
+                         fos1.write(decryptedText);
+                     fos1.close();
                     break;
 
                 default:
